@@ -3072,5 +3072,6 @@
   "nutritionCopyFood": "Food only",
   "nutritionCopyFoodHint": "Meals, foods, calories and macros",
   "nutritionCopyAll": "The whole day",
-  "nutritionCopyAllHint": "Also your workout, weight and health data"
+  "nutritionCopyAllHint": "Also your workout, weight and health data",
+  "basedOnGymMane": "Based on GymMane by InlitX"
 }

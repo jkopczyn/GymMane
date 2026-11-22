@@ -8826,4 +8826,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get nutritionCopyAllHint => 'Also your workout, weight and health data';
+
+  @override
+  String get basedOnGymMane => 'Based on GymMane by InlitX';
 }
