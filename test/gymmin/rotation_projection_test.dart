@@ -231,12 +231,29 @@ void main() {
       expect(plan(3), ['A', 'B', 'rest']);
     });
 
-    test('removing a routine does not add a rest step', () {
+    test('deselecting a routine in the picker also removes the rest step after it', () {
       final a = routine('A'), b = routine('B');
       fit.setRotation(true);
       fit.toggleRotationRoutine(a.id, rest: true);
       fit.toggleRotationRoutine(b.id, rest: true);
+      expect(fit.rotationIds, [a.id, 'rest-1', b.id, 'rest-2']);
       fit.toggleRotationRoutine(b.id, rest: true);
+      expect(fit.rotationIds, [a.id, 'rest-1']);
+      fit.toggleRotationRoutine(b.id, rest: true);
+      expect(fit.rotationIds, [a.id, 'rest-1', b.id, 'rest-2']);
+    });
+
+    test('deselecting a routine followed by another routine removes nothing else', () {
+      final a = routine('A'), b = routine('B');
+      cycle([a, b, 'rest']);
+      fit.toggleRotationRoutine(a.id, rest: true);
+      expect(fit.rotationIds, [b.id, 'rest-1']);
+    });
+
+    test('removing a routine outside the picker keeps the rest step after it', () {
+      final a = routine('A'), b = routine('B');
+      cycle([a, 'rest', b, 'rest']);
+      fit.toggleRotationRoutine(b.id);
       expect(fit.rotationIds, [a.id, 'rest-1', 'rest-2']);
     });
 
@@ -298,6 +315,41 @@ void main() {
       expect([for (var i = 0; i < 3; i++) fit.rotationRestOn(real(i))], restBefore);
       expect(fit.todayRoutine?.id, a.id);
       expect(realPlan(4)[3], 'A');
+    });
+
+    test('the picker removing the current routine and its rest keeps the cursor valid', () {
+      final a = routine('A'), b = routine('B');
+      fit.setRotation(true);
+      fit.toggleRotationRoutine(a.id, rest: true);
+      fit.toggleRotationRoutine(b.id, rest: true);
+      fit.setRotationNext(b.id);
+      fit.toggleRotationRoutine(b.id, rest: true);
+      expect(fit.rotationIds, [a.id, 'rest-1']);
+      expect(fit.rotationNextId, a.id);
+      expect(fit.todayRoutine?.id, a.id);
+      expect(realPlan(3), ['A', 'rest', 'A']);
+    });
+
+    test('the picker removing a routine whose rest step is pending keeps the cursor valid', () {
+      final a = routine('A'), b = routine('B'), c = routine('C');
+      fit.setRotation(true);
+      for (final r in [a, b, c]) {
+        fit.toggleRotationRoutine(r.id, rest: true);
+      }
+      train(a, real(-1));
+      expect(fit.restingToday, isTrue);
+      fit.toggleRotationRoutine(a.id, rest: true);
+      expect(fit.rotationIds, [b.id, 'rest-2', c.id, 'rest-3']);
+      expect(fit.restingToday, isFalse);
+      expect(fit.todayRoutine?.id, b.id);
+      expect(realPlan(3), ['B', 'rest', 'C']);
+
+      train(b, real(0));
+      expect(fit.rotationRestOn(real(1)), isTrue);
+      fit.toggleRotationRoutine(c.id, rest: true);
+      expect(fit.rotationIds, [b.id, 'rest-2']);
+      expect(fit.rotationRestOn(real(1)), isTrue);
+      expect(realPlan(3), ['B', 'rest', 'B']);
     });
 
     test('no steps or only rest steps never divide by zero', () {

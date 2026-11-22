@@ -409,7 +409,14 @@ mixin RoutinesState on FitCore, LibraryState {
   void toggleRotationRoutine(String id, {bool rest = false}) {
     if (_routine(id) == null) return;
     _settleRotation();
-    if (rotationIds.remove(id)) {
+    final i = rotationIds.indexOf(id);
+    if (i >= 0) {
+      final n = rotationIds.length;
+      if (rest && i + 1 < n && isRestStep(rotationIds[i + 1])) {
+        if (rotationNextId == rotationIds[i + 1]) _pointRotation(rotationIds[(i + 2) % n]);
+        rotationIds.removeAt(i + 1);
+      }
+      rotationIds.removeAt(i);
       if (rotationNextId == id) rotationNextId = '';
     } else {
       rotationIds.add(id);
