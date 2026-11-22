@@ -15,6 +15,10 @@ fi
 sed -n 's/ ## .*//p' "$list" | sort -u > "$tmp/expected"
 
 flutter test --dart-define=GYMMIN_OFF=true --reporter json 2>/dev/null | grep '^{' > "$tmp/events"
+if ! grep -q '"type":"done"' "$tmp/events"; then
+  echo "The test run stopped before it finished, so its failures cannot be compared." >&2
+  exit 1
+fi
 jq -r -s '
   (map(select(.type == "suite") | {key: (.suite.id | tostring), value: .suite.path}) | from_entries) as $files
   | (map(select(.type == "testStart") | {key: (.test.id | tostring), value: .test}) | from_entries) as $tests
