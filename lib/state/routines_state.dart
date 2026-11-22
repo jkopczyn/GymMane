@@ -448,7 +448,7 @@ mixin RoutinesState on FitCore, LibraryState {
   }
 
   void _advanceRotation(String? routineId, DateTime on) {
-    if (!rotation || routineId == null) return;
+    if (!rotation || routineId == null || _dayKey(on).isAfter(_dayKey(DateTime.now()))) return;
     final steps = rotationSteps;
     final i = steps.indexOf(routineId);
     if (i < 0) return;

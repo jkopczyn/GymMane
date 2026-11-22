@@ -127,13 +127,6 @@ void main() {
       expect(fit.rotationProjection(day(0), day(0), today: today).single.routine?.name, 'A');
     });
 
-    test('a session dated in the future does not anchor the projection', () {
-      train(a, day(3));
-      final days = plan(5);
-      expect(days.take(2), ['rest', 'B']);
-      expect(days[3], 'A');
-    });
-
     test('past days show the rotation routine logged that day, or nothing', () {
       train(a, day(-2));
       expect(plan(3, from: -3), ['-', 'A', '-']);
@@ -293,6 +286,37 @@ void main() {
           for (final d in fit.rotationProjection(real(0), real(days - 1)))
             d.routine?.name ?? (d.rest ? 'rest' : '-'),
         ];
+
+    test('a session dated in the future does not change the days before it', () {
+      final a = routine('A'), b = routine('B');
+      cycle([a, 'rest', b, 'rest']);
+      final before = realPlan(3);
+      final restBefore = [for (var i = 0; i < 3; i++) fit.rotationRestOn(real(i))];
+      expect(before, ['A', 'rest', 'B']);
+      train(a, real(3));
+      expect(realPlan(3), before);
+      expect([for (var i = 0; i < 3; i++) fit.rotationRestOn(real(i))], restBefore);
+      expect(fit.todayRoutine?.id, a.id);
+      expect(realPlan(4)[3], 'A');
+    });
+
+    test('no steps or only rest steps never divide by zero', () {
+      fit.setRotation(true);
+      expect(fit.rotation, isTrue);
+      for (final add in [false, true]) {
+        if (add) {
+          fit.addRotationRest();
+          fit.addRotationRest();
+        }
+        expect(fit.rotating, isFalse);
+        expect(fit.routinesOn(real(2)), isEmpty);
+        expect(fit.rotationRestOn(real(2)), isFalse);
+        expect(fit.todayRoutine, isNull);
+        expect(fit.rotationNext, isNull);
+        expect(fit.rotationUpcoming, isNull);
+        expect(realPlan(3), ['-', '-', '-']);
+      }
+    });
 
     test('editing the rotation while a rest step is pending keeps the rest today', () {
       final a = routine('A'), b = routine('B'), c = routine('C');
