@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:archive/archive.dart';
 import 'package:flutter/foundation.dart';
 
+import '../gymmin.dart';
 import '../state/fit_state.dart';
 import '../wear/wear_sync.dart';
 import 'backup_zip.dart';
@@ -14,6 +15,7 @@ class WatchPhone {
   WatchPhone._();
 
   static Future<void> init() async {
+    if (!GymMin.watch) return;
     final link = WatchLink.instance
       ..outgoing = _state
       ..onRequest = _fromWatch

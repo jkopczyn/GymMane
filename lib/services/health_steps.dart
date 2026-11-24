@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart';
+import '../gymmin.dart';
 import 'host.dart';
 
 enum HealthAccess { unsupported, denied, granted }
@@ -18,7 +19,7 @@ class HealthSteps {
   }
 
   static Future<bool> takeUsage() async {
-    if (!onAndroid) return false;
+    if (!GymMin.steps || !onAndroid) return false;
     try {
       return await _channel.invokeMethod<bool>('takeUsage') ?? false;
     } on PlatformException {
@@ -29,7 +30,7 @@ class HealthSteps {
   }
 
   static Future<HealthAccess> access() async {
-    if (!onMobile) return HealthAccess.unsupported;
+    if (!GymMin.steps || !onMobile) return HealthAccess.unsupported;
     try {
       final status = await _channel.invokeMethod<String>('status');
       return HealthAccess.values.asNameMap()[status] ?? HealthAccess.unsupported;
@@ -41,7 +42,7 @@ class HealthSteps {
   }
 
   static Future<bool> request() async {
-    if (!onMobile) return false;
+    if (!GymMin.steps || !onMobile) return false;
     try {
       return await _channel.invokeMethod<bool>('request') ?? false;
     } on PlatformException {
@@ -52,7 +53,7 @@ class HealthSteps {
   }
 
   static Future<bool> openSettings() async {
-    if (!onMobile) return false;
+    if (!GymMin.steps || !onMobile) return false;
     try {
       return await _channel.invokeMethod<bool>('openSettings') ?? false;
     } on PlatformException {
@@ -63,7 +64,7 @@ class HealthSteps {
   }
 
   static Future<Map<DateTime, int>?> read(List<DateTime> days) async {
-    if (days.isEmpty || !onMobile) return null;
+    if (!GymMin.steps || days.isEmpty || !onMobile) return null;
     final cutoff = onIOS ? DateTime.now() : null;
     final ranges = [for (final day in days) stepQueryRange(day, cutoff: cutoff)];
     try {

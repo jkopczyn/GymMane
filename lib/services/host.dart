@@ -2,7 +2,10 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 
-bool get onAndroid => !kIsWeb && Platform.isAndroid;
+@visibleForTesting
+bool? debugOnAndroid;
+
+bool get onAndroid => debugOnAndroid ?? (!kIsWeb && Platform.isAndroid);
 
 bool get onIOS => !kIsWeb && Platform.isIOS;
 
