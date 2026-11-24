@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../app/desktop.dart';
-import '../catalog/exercise_catalog.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../state/fit_state.dart';
@@ -31,7 +30,7 @@ class ToolsScreen extends StatelessWidget {
               title: t.tools,
               onBack: fit.backFromTools,
               titleSize: 22,
-              subtitle: t.calculatorsCount(kToolMeta.length),
+              subtitle: t.calculatorsCount(shownTools().length),
             ),
             const SizedBox(height: 22),
             if (wide)
@@ -44,7 +43,7 @@ class ToolsScreen extends StatelessWidget {
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
                 childAspectRatio: 1.12 / scale,
-                children: [for (final tool in kToolMeta) _card(gc, tool, scale)],
+                children: [for (final tool in shownTools()) _card(gc, tool, scale)],
               ),
           ],
         ),
@@ -53,7 +52,8 @@ class ToolsScreen extends StatelessWidget {
   }
 
   Widget _desktop(GymColors gc, double scale) {
-    final picked = kToolMeta.any((m) => m.id == fit.activeToolId) ? fit.activeToolId! : kToolMeta.first.id;
+    final tools = shownTools();
+    final picked = tools.any((m) => m.id == fit.activeToolId) ? fit.activeToolId! : tools.first.id;
     if (fit.activeToolId != picked) fit.activeToolId = picked;
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Expanded(
@@ -62,7 +62,7 @@ class ToolsScreen extends StatelessWidget {
               (t.kindStrength, const ['rm', 'plate', 'warmup', 'rpe', 'dots', 'wilks']),
               (t.toolGroupBody, const ['bmi', 'bf', 'ffmi']),
               (t.nutrition, const ['cal', 'protein', 'water']),
-            ].indexed) ...[
+            ].where((g) => g.$2.any(toolShown)).indexed) ...[
               if (i > 0) const SizedBox(height: 26),
               Padding(
                 padding: const EdgeInsetsDirectional.only(start: 4, bottom: 12),
@@ -79,7 +79,7 @@ class ToolsScreen extends StatelessWidget {
                     mainAxisExtent: 82 * scale,
                   ),
                   children: [
-                    for (final tool in kToolMeta)
+                    for (final tool in tools)
                       if (g.$2.contains(tool.id)) _row(gc, tool),
                   ],
                 ),

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../app/desktop.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
@@ -140,25 +141,26 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                   ex: ex, height: 220, radius: 22, live: true, bordered: false),
             ),
           ),
-          Positioned(
-            bottom: 10,
-            right: 10,
-            child: Row(
-              children: [
-                if (hasMedia) ...[
-                  _mediaBtn(gc, PhosphorIconsRegular.arrowCounterClockwise, t.useDefaultArt,
-                      () => fit.clearExerciseMedia(ex.id)),
-                  const SizedBox(width: 8),
+          if (GymMin.photos)
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Row(
+                children: [
+                  if (hasMedia) ...[
+                    _mediaBtn(gc, PhosphorIconsRegular.arrowCounterClockwise, t.useDefaultArt,
+                        () => fit.clearExerciseMedia(ex.id)),
+                    const SizedBox(width: 8),
+                  ],
+                  _mediaBtn(
+                    gc,
+                    hasMedia ? PhosphorIconsRegular.pencilSimple : PhosphorIconsRegular.uploadSimple,
+                    hasMedia ? t.changeMedia : t.addMedia,
+                    _pickMedia,
+                  ),
                 ],
-                _mediaBtn(
-                  gc,
-                  hasMedia ? PhosphorIconsRegular.pencilSimple : PhosphorIconsRegular.uploadSimple,
-                  hasMedia ? t.changeMedia : t.addMedia,
-                  _pickMedia,
-                ),
-              ],
+              ),
             ),
-          ),
         ],
       ),
     );
