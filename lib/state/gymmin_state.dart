@@ -55,4 +55,7 @@ mixin GymMinState on FitCore, SettingsState, TimelineState, StepsState, Recovery
 
   @override
   bool get photoDue => GymMin.photos && super.photoDue;
+
+  @override
+  String? get bgPhotoPath => GymMin.photos ? super.bgPhotoPath : null;
 }
