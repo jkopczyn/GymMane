@@ -256,14 +256,18 @@ mixin RoutinesState on FitCore, LibraryState {
           if (isRestStep(id) || _routine(id) != null) id,
       ];
 
-  ({int index, DateTime? rest}) get _rotationCursor {
+  ({int index, DateTime? rest}) get _rotationCursor => _rotationCursorAt(DateTime.now());
+
+  ({int index, DateTime? rest}) _rotationCursorAt(DateTime now) {
     final steps = rotationSteps;
     if (rotationRoutines.isEmpty) return (index: 0, rest: null);
     var i = steps.indexOf(rotationNextId);
     if (i < 0) i = 0;
     if (!isRestStep(steps[i])) return (index: i, rest: null);
-    final today = _dayKey(DateTime.now());
+    final today = _dayKey(now);
+    final start = _rotationStart(today);
     var day = _dayKey(rotationRestDay ?? today);
+    if (day.isAfter(start)) day = start;
     while (isRestStep(steps[i]) && day.isBefore(today)) {
       i = (i + 1) % steps.length;
       day = shiftDays(day, 1);
@@ -314,25 +318,36 @@ mixin RoutinesState on FitCore, LibraryState {
     return _rotationOn(day).isEmpty;
   }
 
-  List<Routine> _rotationOn(DateTime day) {
+  DateTime _rotationStart(DateTime today) =>
+      _sessionsOnDay(today).any((s) => s.routineId != null && rotationIds.contains(s.routineId))
+          ? shiftDays(today, 1)
+          : today;
+
+  List<Routine> _rotationOn(DateTime day, [DateTime? now]) {
     final key = _dayKey(day);
-    final today = _dayKey(DateTime.now());
+    final today = _dayKey(now ?? DateTime.now());
     final done = [
       for (final s in _sessionsOnDay(key))
         if (s.routineId != null && rotationIds.contains(s.routineId)) ?_routine(s.routineId!),
     ];
     if (key.isBefore(today) || done.isNotEmpty) return done;
+    final start = _rotationStart(today);
+    if (key.isBefore(start)) return const [];
     final steps = rotationSteps;
-    final c = _rotationCursor;
-    var rest = c.rest;
-    if (rest == null) return [?_routine(steps[c.index])];
-    var i = c.index;
-    while (isRestStep(steps[i])) {
-      if (!key.isAfter(rest!)) return const [];
-      i = (i + 1) % steps.length;
-      rest = shiftDays(rest, 1);
-    }
-    return [?_routine(steps[i])];
+    final i = _rotationCursorAt(today).index + daysBetween(start, key);
+    return [?_routine(steps[i % steps.length])];
+  }
+
+  List<({DateTime day, Routine? routine, bool rest})> rotationProjection(DateTime from, DateTime to,
+      {DateTime? today}) {
+    final now = _dayKey(today ?? DateTime.now());
+    return [
+      for (var d = _dayKey(from); !d.isAfter(to); d = shiftDays(d, 1))
+        if (!rotating)
+          (day: d, routine: null, rest: false)
+        else if (_rotationOn(d, now) case final on)
+          (day: d, routine: on.firstOrNull, rest: on.isEmpty && !d.isBefore(now)),
+    ];
   }
 
   @override
@@ -356,12 +371,16 @@ mixin RoutinesState on FitCore, LibraryState {
   }
 
   void addRotationRest() {
+    _addRestStep();
+    _planChanged();
+  }
+
+  void _addRestStep() {
     var n = 1;
     while (rotationIds.contains('rest-$n')) {
       n++;
     }
     rotationIds.add('rest-$n');
-    _planChanged();
   }
 
   void removeRotationRest(String id) {
@@ -387,13 +406,21 @@ mixin RoutinesState on FitCore, LibraryState {
     rotationRestDay = isRestStep(id) ? _dayKey(rest ?? DateTime.now()) : null;
   }
 
-  void toggleRotationRoutine(String id) {
+  void toggleRotationRoutine(String id, {bool rest = false}) {
     if (_routine(id) == null) return;
     _settleRotation();
-    if (rotationIds.remove(id)) {
+    final i = rotationIds.indexOf(id);
+    if (i >= 0) {
+      final n = rotationIds.length;
+      if (rest && i + 1 < n && isRestStep(rotationIds[i + 1])) {
+        if (rotationNextId == rotationIds[i + 1]) _pointRotation(rotationIds[(i + 2) % n]);
+        rotationIds.removeAt(i + 1);
+      }
+      rotationIds.removeAt(i);
       if (rotationNextId == id) rotationNextId = '';
     } else {
       rotationIds.add(id);
+      if (rest) _addRestStep();
     }
     _fixRotationNext();
     _planChanged();
@@ -428,7 +455,7 @@ mixin RoutinesState on FitCore, LibraryState {
   }
 
   void _advanceRotation(String? routineId, DateTime on) {
-    if (!rotation || routineId == null) return;
+    if (!rotation || routineId == null || _dayKey(on).isAfter(_dayKey(DateTime.now()))) return;
     final steps = rotationSteps;
     final i = steps.indexOf(routineId);
     if (i < 0) return;

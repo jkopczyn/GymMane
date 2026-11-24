@@ -930,7 +930,7 @@ class RoutinesScreen extends StatelessWidget {
                             ? String.fromCharCode(65 + fit.rotationRoutines.indexOf(r) % 26)
                             : (r.group.isEmpty ? null : r.group),
                         selected: fit.rotationIds.contains(r.id),
-                        onTap: () => fit.toggleRotationRoutine(r.id),
+                        onTap: () => fit.toggleRotationRoutine(r.id, rest: true),
                       ),
                   ],
                 ),
