@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gymmane/app/desktop.dart';
 import 'package:gymmane/gymmin.dart';
 import 'package:gymmane/l10n/l10n.dart';
 import 'package:gymmane/screens/settings_screen.dart';
@@ -16,6 +17,7 @@ import 'package:gymmane/widgets/medal.dart';
 import 'package:gymmane/widgets/profile_avatar.dart';
 import 'package:gymmane/widgets/quick_tiles_sheet.dart';
 import 'package:gymmane/widgets/settings_showcase.dart';
+import 'package:gymmane/widgets/ui_kit.dart';
 import 'package:gymmane/widgets/widget_showcase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -168,6 +170,43 @@ void main() {
       expect(find.text(t.reportTitle), findsOneWidget);
       expect(find.text(t.watchRow), findsOneWidget);
     });
+    testWidgets('the settings home lists no Beta category and opens', (tester) async {
+      await pumpPage(tester, const SettingsScreen());
+      expect(tester.takeException(), isNull);
+      expect(find.text(t.sectionData), findsWidgets);
+      expect(find.text(t.sectionBeta), findsNothing);
+      expect(find.text(titleCase(t.sectionBeta)), findsNothing);
+    });
+
+    testWidgets('settings search finds no hidden row', (tester) async {
+      await pumpPage(tester, const SettingsScreen());
+      for (final (query, label) in [
+        ('medals', t.gamificationSetting),
+        ('language', t.languageLabel),
+        ('pass', t.gymPass),
+        ('nutrition', t.nutritionBeta),
+      ]) {
+        await tester.enterText(find.byType(TextField), query);
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.text(label), findsNothing, reason: query);
+      }
+      await tester.enterText(find.byType(TextField), 'rest');
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text(t.restTimer), findsWidgets);
+    });
+
+    testWidgets('the desktop settings home opens every remaining section', (tester) async {
+      await pumpPage(tester, const DesktopScope(wide: true, child: SettingsScreen()), size: const Size(1400, 4000));
+      expect(tester.takeException(), isNull);
+      for (final title in [t.sectionGeneral, t.sectionTraining, t.sectionAlerts, t.sectionHome, t.sectionData]) {
+        await tester.tap(find.text(title).first);
+        await tester.pump();
+        await tester.pump(const Duration(seconds: 2));
+        expect(tester.takeException(), isNull, reason: title);
+        expect(emptyCard, findsNothing, reason: title);
+      }
+      expect(find.text(t.sectionBeta), findsNothing);
+    });
   });
 
   group('sheets', () {
@@ -225,6 +264,14 @@ void main() {
       expect(find.byType(Medal), findsNothing);
       expect(find.byType(GymPassCard), findsNothing);
       for (final label in [t.homeCardSteps, t.healthRestingHr, t.healthBpm, 'kcal', '2,1 L']) {
+        expect(find.text(label), findsNothing, reason: label);
+      }
+    });
+
+    testWidgets('the look showcase has no language or photo tile', (tester) async {
+      await pumpPage(tester, const LookShowcase(), size: const Size(1000, 1000));
+      expect(find.text('60 fps'), findsOneWidget);
+      for (final label in ['A文', 'RTL', 'العربية', '9:16']) {
         expect(find.text(label), findsNothing, reason: label);
       }
     });

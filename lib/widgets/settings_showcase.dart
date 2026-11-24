@@ -998,13 +998,13 @@ class LookShowcase extends StatelessWidget {
           _iconTile(gc, PhosphorIconsRegular.ruler, 'cm', '', gc.sage),
           _gauge(gc, 0.3, '1,15×', gc.sage),
           _iconTile(gc, PhosphorIconsRegular.thermometer, '°C', '', gc.warn),
-          _iconTile(gc, PhosphorIconsRegular.arrowsLeftRight, 'RTL', '', gc.textSecondary),
+          if (GymMin.languages) _iconTile(gc, PhosphorIconsRegular.arrowsLeftRight, 'RTL', '', gc.textSecondary),
           _iconTile(gc, PhosphorIconsRegular.calendarBlank, _letter(1), '', gc.accent),
         ]),
         _stack(0, [
           _wideStat(gc, PhosphorIconsRegular.clock, '6:30 PM', '12 h', gc.textSecondary),
           _bars(gc, const [0.2, 0.9, 0.5, 0.7, 0.35, 0.6, 0.0], hi: 1),
-          _chips(gc, const ['ES', 'EN', 'DE', 'FR', 'IT', 'PT', 'العربية'], on: 0),
+          if (GymMin.languages) _chips(gc, const ['ES', 'EN', 'DE', 'FR', 'IT', 'PT', 'العربية'], on: 0),
           _calendar(gc, 5, '84', gc.accent),
           _rings(gc, [(0.33, gc.textSecondary, '1×'), (0.66, gc.accent, '1,15×'), (1.0, gc.text, '1,3×')]),
           _wideStat(gc, PhosphorIconsRegular.squaresFour, '3', '', gc.text),
@@ -1024,7 +1024,7 @@ class LookShowcase extends StatelessWidget {
         _stack(0, [
           _toggleTile(gc, PhosphorIconsRegular.sunDim, false),
           _iconTile(gc, PhosphorIconsRegular.eye, '100 %', '', gc.textSecondary),
-          _iconTile(gc, PhosphorIconsRegular.image, '9:16', '', gc.info),
+          if (GymMin.photos) _iconTile(gc, PhosphorIconsRegular.image, '9:16', '', gc.info),
           _iconTile(gc, PhosphorIconsRegular.palette, '4', '', gc.accent),
           _iconTile(gc, PhosphorIconsRegular.frameCorners, '16', '', gc.textSecondary),
           _iconTile(gc, PhosphorIconsRegular.monitor, '1440', '', gc.textSecondary),
@@ -1032,7 +1032,7 @@ class LookShowcase extends StatelessWidget {
         ]),
       ],
       columns: [
-        _stack(20, [themes, units, text, _iconTile(gc, PhosphorIconsRegular.translate, 'A文', '', gc.accent),
+        _stack(20, [themes, units, text, if (GymMin.languages) _iconTile(gc, PhosphorIconsRegular.translate, 'A文', '', gc.accent),
             _iconTile(gc, PhosphorIconsRegular.clock, '18:30', '24 h', gc.textSecondary),
             _toggleTile(gc, PhosphorIconsRegular.moon, true),
             _iconTile(gc, PhosphorIconsRegular.textAa, '1,3×', '', gc.textSecondary)]),
