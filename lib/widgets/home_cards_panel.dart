@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../state/fit_state.dart';
 import '../theme/app_colors.dart';
@@ -19,10 +20,10 @@ class HomeCardsPanel extends StatelessWidget {
     final gc = context.gc;
     final rows = <(String, bool, VoidCallback)>[
       (t.homeCardFocus, fit.showFocus, fit.toggleFocusCard),
-      if (fit.stepsAvailable) (t.homeCardSteps, fit.stepsOn, onSteps),
+      if (GymMin.steps && fit.stepsAvailable) (t.homeCardSteps, fit.stepsOn, onSteps),
       (t.homeCardWeek, fit.showWeekStats, fit.toggleWeekStats),
       (t.homeCardRoutines, fit.showRoutineRow, fit.toggleRoutineRow),
-      (t.homeCardRecommended, fit.showRecommended, fit.toggleRecommended),
+      if (GymMin.suggested) (t.homeCardRecommended, fit.showRecommended, fit.toggleRecommended),
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Container(
@@ -118,7 +119,7 @@ void _showOrderSheet(BuildContext context) {
   final gc = context.gc;
   var order = [
     for (final id in fit.homeOrderShown)
-      if ((id != 'nutrition' || fit.nutritionBeta) && (id != 'recovery' || fit.recoveryOn) && (id != 'steps' || (fit.stepsOn && fit.stepsAvailable))) id,
+      if ((id != 'nutrition' || fit.nutritionBeta) && (id != 'recovery' || fit.recoveryOn) && (id != 'steps' || (fit.stepsOn && fit.stepsAvailable)) && (id != 'recommended' || GymMin.suggested)) id,
   ];
   showAppSheet<void>(
     context: context,

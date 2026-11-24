@@ -14,6 +14,7 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../app/desktop.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/profile.dart';
 import '../services/graphics_mode.dart';
@@ -157,6 +158,7 @@ class SettingsScreen extends StatelessWidget {
                     fit.setThemePref,
                     hint: t.themeAutoHint,
                   ),
+                  if (GymMin.languages)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => _editLanguage(context),
@@ -501,7 +503,7 @@ class SettingsScreen extends StatelessWidget {
                         hint: t.voiceSettingHint,
                         badge: BetaTag(t.sectionBeta, small: true)),
                   ),
-                  if (NfcTags.available)
+                  if (GymMin.nfc && NfcTags.available)
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => showNfcSheet(context),
@@ -533,6 +535,7 @@ class SettingsScreen extends StatelessWidget {
           ]),
           _subhead(gc, t.routines),
           _card(gc, [
+                  if (GymMin.muscleMap)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: fit.toggleMiniBody,
@@ -723,8 +726,9 @@ class SettingsScreen extends StatelessWidget {
             showStepsSheet(context);
           }),
           const SizedBox(height: 22),
+          if (GymMin.healthConnect || GymMin.medals || GymMin.gymPass)
           _card(gc, [
-                  if (fit.stepsAvailable)
+                  if (GymMin.healthConnect && fit.stepsAvailable)
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () => showHealthPicker(context),
@@ -741,12 +745,14 @@ class SettingsScreen extends StatelessWidget {
                           ]),
                           hint: health(t.healthSettingHint)),
                     ),
+                  if (GymMin.medals)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: fit.toggleGamification,
                     child: _prefRow(gc, PhosphorIconsRegular.medal, t.gamificationSetting,
                         TinySwitch(on: fit.gamification), hint: t.gamificationHint),
                   ),
+                  if (GymMin.gymPass)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: fit.togglePass,
@@ -755,12 +761,15 @@ class SettingsScreen extends StatelessWidget {
                   ),
 
           ]),
+          if (GymMin.healthConnect || GymMin.medals || GymMin.gymPass)
           const SizedBox(height: 22),
           const HomeExtrasShowcase(),
         ];
       case 'beta':
         return [
+          if (GymMin.nutrition || GymMin.recovery)
           _card(gc, [
+                  if (GymMin.nutrition)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => fit.setNutritionBeta(!fit.nutritionBeta),
@@ -769,6 +778,7 @@ class SettingsScreen extends StatelessWidget {
                         hint: t.nutritionBetaHint,
                         badge: BetaTag(t.sectionBeta, small: true)),
                   ),
+                  if (GymMin.recovery)
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => fit.setRecoveryOn(!fit.recoveryOn),
@@ -779,6 +789,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
 
           ]),
+          if (GymMin.nutrition) ...[
           const SizedBox(height: 28),
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 0, 12),
@@ -816,16 +827,18 @@ class SettingsScreen extends StatelessWidget {
           _linkGroup(gc, [
             (PhosphorIconsRegular.githubLogo, t.nutritionAboutSuggest, () => _open(context, '$_kRepoUrl/issues')),
           ]),
+          ],
         ];
       case 'widgets':
         return [
           _linkGroup(gc, [
               (PhosphorIconsRegular.squaresFour, t.addActivityWidget, () => _addWidget(context, 'HeatmapWidgetProvider')),
               (PhosphorIconsRegular.chartBar, t.addStatsWidget, () => _addWidget(context, 'StatsWidgetProvider')),
-              (PhosphorIconsRegular.person, t.addBodyWidget, () => _addWidget(context, 'BodyWidgetProvider')),
+              if (GymMin.muscleMap)
+                (PhosphorIconsRegular.person, t.addBodyWidget, () => _addWidget(context, 'BodyWidgetProvider')),
               (PhosphorIconsRegular.checkCircle, t.addTodayWidget, () => _addWidget(context, 'TodayWidgetProvider')),
               (PhosphorIconsRegular.calendarCheck, t.addWeekWidget, () => _addWidget(context, 'WeekWidgetProvider')),
-          ], hints: [t.widgetHintActivity, t.widgetHintStats, t.widgetHintBody, t.widgetHintToday, t.widgetHintWeek]),
+          ], hints: [t.widgetHintActivity, t.widgetHintStats, if (GymMin.muscleMap) t.widgetHintBody, t.widgetHintToday, t.widgetHintWeek]),
           const SizedBox(height: 22),
           const WidgetShowcase(),
         ];
@@ -839,16 +852,16 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 12),
           _linkGroup(gc, [
               (PhosphorIconsRegular.fileCsv, t.exportCsv, () => _exportCsv(context)),
-              (PhosphorIconsRegular.fileText, t.reportTitle, () => showReportSheet(context)),
+              if (GymMin.sharing) (PhosphorIconsRegular.fileText, t.reportTitle, () => showReportSheet(context)),
               (PhosphorIconsRegular.fileZip, t.exportBackup, () => _exportBackup(context)),
               (PhosphorIconsRegular.downloadSimple, t.importBackup, () => _importBackup(context)),
               if (AutoBackup.instance.supported)
                 (PhosphorIconsRegular.clockCounterClockwise, t.autoBackup, () => showAutoBackupSheet(context)),
-              if (WatchLink.instance.available) (PhosphorIconsRegular.watch, t.watchRow, () => showWatchSheet(context)),
+              if (GymMin.watch && WatchLink.instance.available) (PhosphorIconsRegular.watch, t.watchRow, () => showWatchSheet(context)),
               (PhosphorIconsRegular.export, t.stravaRow, () => showStravaSheet(context)),
               (PhosphorIconsRegular.barbell, t.clearWorkouts, () => _clearWorkouts(context)),
               (PhosphorIconsRegular.trash, t.resetData, () => _resetAll(context)),
-          ], danger: (AutoBackup.instance.supported ? 6 : 5) + (WatchLink.instance.available ? 1 : 0)),
+          ], danger: (AutoBackup.instance.supported ? 6 : 5) - (GymMin.sharing ? 0 : 1) + (GymMin.watch && WatchLink.instance.available ? 1 : 0)),
         ];
       default:
         return [
@@ -920,7 +933,7 @@ class SettingsScreen extends StatelessWidget {
     return [
       _Category('general', PhosphorIconsRegular.slidersHorizontal, _sectionTitle('general'), [
         (t.theme, PhosphorIconsRegular.moon),
-        (t.languageLabel, PhosphorIconsRegular.translate),
+        if (GymMin.languages) (t.languageLabel, PhosphorIconsRegular.translate),
         (t.unitsLabel, PhosphorIconsRegular.scales),
         (t.weekStartSetting, PhosphorIconsRegular.calendarBlank),
         (t.heatRangeSetting, PhosphorIconsRegular.calendarDots),
@@ -940,7 +953,7 @@ class SettingsScreen extends StatelessWidget {
         (t.autoProgressSetting, PhosphorIconsRegular.trendUp),
         (t.deloadSetting, PhosphorIconsRegular.feather),
         (t.voiceSetting, PhosphorIconsRegular.waveform),
-        if (NfcTags.available) (t.nfcRow, PhosphorIconsRegular.contactlessPayment),
+        if (GymMin.nfc && NfcTags.available) (t.nfcRow, PhosphorIconsRegular.contactlessPayment),
         if (QuickTiles.available) (t.qsRow, PhosphorIconsRegular.squaresFour),
         (t.autoAdvance, PhosphorIconsRegular.skipForward),
         (t.autoHold, PhosphorIconsRegular.hourglassMedium),
@@ -948,7 +961,7 @@ class SettingsScreen extends StatelessWidget {
         (t.keepScreenOn, PhosphorIconsRegular.sun),
         (t.checkInSetting, PhosphorIconsRegular.moon),
         (t.tuneSetting, PhosphorIconsRegular.equalizer),
-        (t.miniBodySetting, PhosphorIconsRegular.person),
+        if (GymMin.muscleMap) (t.miniBodySetting, PhosphorIconsRegular.person),
         (t.multiPlanSetting, PhosphorIconsRegular.stack),
         (t.levelHintsSetting, PhosphorIconsRegular.stairs),
         (t.layoutSetting, PhosphorIconsRegular.rows),
@@ -966,33 +979,34 @@ class SettingsScreen extends StatelessWidget {
       ]),
       _Category('home', PhosphorIconsRegular.house, _sectionTitle('home'), [
         (t.focusCard, PhosphorIconsRegular.target),
-        (t.homeRecommended, PhosphorIconsRegular.sparkle),
+        if (GymMin.suggested) (t.homeRecommended, PhosphorIconsRegular.sparkle),
         (t.homeRoutines, PhosphorIconsRegular.folders),
         (t.homeWeekStats, PhosphorIconsRegular.chartBar),
-        (health(t.stepsSetting), PhosphorIconsRegular.footprints),
-        (t.healthSetting, PhosphorIconsRegular.heartbeat),
-        (t.gamificationSetting, PhosphorIconsRegular.medal),
-        (t.gymPass, PhosphorIconsRegular.qrCode),
+        if (GymMin.steps) (health(t.stepsSetting), PhosphorIconsRegular.footprints),
+        if (GymMin.healthConnect) (t.healthSetting, PhosphorIconsRegular.heartbeat),
+        if (GymMin.medals) (t.gamificationSetting, PhosphorIconsRegular.medal),
+        if (GymMin.gymPass) (t.gymPass, PhosphorIconsRegular.qrCode),
       ]),
       if (onMobile)
         _Category('widgets', PhosphorIconsRegular.squaresFour, _sectionTitle('widgets'), [
           (t.addActivityWidget, PhosphorIconsRegular.squaresFour),
           (t.addStatsWidget, PhosphorIconsRegular.chartBar),
-          (t.addBodyWidget, PhosphorIconsRegular.person),
+          if (GymMin.muscleMap) (t.addBodyWidget, PhosphorIconsRegular.person),
           (t.addTodayWidget, PhosphorIconsRegular.checkCircle),
           (t.addWeekWidget, PhosphorIconsRegular.calendarCheck),
         ]),
-      _Category('beta', PhosphorIconsRegular.flask, _sectionTitle('beta'), [
-        (t.nutritionBeta, PhosphorIconsRegular.forkKnife),
-        (t.recoveryTitle, PhosphorIconsRegular.thermometerSimple),
-      ]),
+      if (GymMin.nutrition || GymMin.recovery)
+        _Category('beta', PhosphorIconsRegular.flask, _sectionTitle('beta'), [
+          if (GymMin.nutrition) (t.nutritionBeta, PhosphorIconsRegular.forkKnife),
+          if (GymMin.recovery) (t.recoveryTitle, PhosphorIconsRegular.thermometerSimple),
+        ]),
       _Category('data', PhosphorIconsRegular.database, _sectionTitle('data'), [
         (t.exportCsv, PhosphorIconsRegular.fileCsv),
-        (t.reportTitle, PhosphorIconsRegular.fileText),
+        if (GymMin.sharing) (t.reportTitle, PhosphorIconsRegular.fileText),
         (t.exportBackup, PhosphorIconsRegular.fileZip),
         (t.importBackup, PhosphorIconsRegular.downloadSimple),
         (t.autoBackup, PhosphorIconsRegular.clockCounterClockwise),
-        if (WatchLink.instance.available) (t.watchRow, PhosphorIconsRegular.watch),
+        if (GymMin.watch && WatchLink.instance.available) (t.watchRow, PhosphorIconsRegular.watch),
         (t.importFromApp, PhosphorIconsRegular.arrowSquareIn),
         (t.stravaRow, PhosphorIconsRegular.export),
         (t.clearWorkouts, PhosphorIconsRegular.barbell),
@@ -1824,7 +1838,7 @@ class SettingsScreen extends StatelessWidget {
       isScrollControlled: true,
       builder: (sheet) => StatefulBuilder(
         builder: (sheet, setSheet) {
-          final photo = fit.bgPhotoPath;
+          final photo = GymMin.photos ? fit.bgPhotoPath : null;
           return Container(
             padding: sheetPad(sheet),
             decoration: sheetDecoration(gc),
@@ -1878,6 +1892,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                   ],
+                  if (GymMin.photos)
                   GhostButton(
                     label: photo == null ? t.bgPhotoPick : t.bgPhotoChange,
                     icon: PhosphorIconsRegular.image,
@@ -1899,11 +1914,13 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                   ],
+                  if (GymMin.photos) ...[
                   const SizedBox(height: 6),
                   Text(t.bgPhotoHint,
                       textAlign: TextAlign.center,
                       style: AppTheme.f(11.5, weight: FontWeight.w500, color: gc.textTertiary, height: 1.4)),
                   const SizedBox(height: 16),
+                  ],
                   PrimaryButton(label: t.done, onTap: () => Navigator.of(sheet).pop()),
                 ],
               ),
@@ -2291,8 +2308,10 @@ class _ProfileSheetState extends State<_ProfileSheet> {
             const SizedBox(height: 3),
             Text(t.autofills, style: AppTheme.f(13, weight: FontWeight.w500, color: gc.textSecondary)),
             const SizedBox(height: 18),
+            if (GymMin.photos) ...[
             _top(gc, sheet),
             const SizedBox(height: 16),
+            ],
             _group(gc, [
               _field(gc, t.nameLabel, TextField(
                 controller: _name,
@@ -2341,6 +2360,7 @@ class _ProfileSheetState extends State<_ProfileSheet> {
                   edit: editBodyWeight),
               _stepRow(gc, t.weeklyGoal, '${p.weeklyGoal}×', () => _up(() => fit.updateProfile(weeklyGoalDelta: -1)), () => _up(() => fit.updateProfile(weeklyGoalDelta: 1))),
             ]),
+            if (GymMin.bodyComposition) ...[
             const SizedBox(height: 18),
             Padding(padding: const EdgeInsetsDirectional.only(start: 4), child: _label(gc, t.activityLabel)),
             const SizedBox(height: 10),
@@ -2350,6 +2370,7 @@ class _ProfileSheetState extends State<_ProfileSheet> {
               _act(gc, t.activityName('Moderate'), 1.55),
               _act(gc, t.activityName('Active'), 1.725),
             ]),
+            ],
             const SizedBox(height: 24),
             PrimaryButton(label: t.done, onTap: () => Navigator.of(context).pop()),
           ],

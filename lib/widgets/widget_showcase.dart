@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../theme/app_colors.dart';
 import 'home_widget_views.dart';
@@ -139,6 +140,7 @@ class WidgetShowcase extends StatelessWidget {
           child: lift(TodayWidgetView(gc: gc, done: true, planned: true, streak: 12, size: const Size(112, 112))),
         ),
       ),
+      if (GymMin.nutrition)
       _vessel(gc,
           title: t.waterLabel,
           icon: PhosphorIconsFill.drop,
@@ -152,6 +154,7 @@ class WidgetShowcase extends StatelessWidget {
           goal: '/ 2.5 L',
           pill: '+ 250 ml',
           level: 0.6),
+      if (GymMin.nutrition)
       _vessel(gc,
           title: t.macroProtein,
           icon: PhosphorIconsFill.lightning,
@@ -170,6 +173,7 @@ class WidgetShowcase extends StatelessWidget {
     ]);
     final wide = col(40, [
       HeatmapWidgetView(gc: gc, levels: _levels, streak: 12),
+      if (GymMin.nutrition)
       KcalWidgetView(
         gc: gc,
         kcal: 1640,
@@ -180,7 +184,7 @@ class WidgetShowcase extends StatelessWidget {
         goals: (150, 260, 70),
         unit: 'kcal',
       ),
-      BodyWidgetView(gc: gc, intensity: _body, days: 7, size: const Size(320, 220)),
+      if (GymMin.muscleMap) BodyWidgetView(gc: gc, intensity: _body, days: 7, size: const Size(320, 220)),
       Align(
         alignment: Alignment.centerRight,
         child: lift(TodayWidgetView(gc: gc, done: false, planned: false, rest: true, streak: 12, size: const Size(130, 130))),
