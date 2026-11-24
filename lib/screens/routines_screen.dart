@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../catalog/program_templates.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/workout.dart';
 import '../services/plan_pdf.dart';
@@ -41,7 +42,7 @@ class RoutinesScreen extends StatelessWidget {
               child: Icon(PhosphorIconsRegular.downloadSimple, size: 17, color: gc.text),
             ),
           ),
-          if (fit.activeRoutines.isNotEmpty) ...[
+          if (GymMin.sharing && fit.activeRoutines.isNotEmpty) ...[
             const SizedBox(width: 8),
             Semantics(
               button: true,
@@ -185,12 +186,14 @@ class RoutinesScreen extends StatelessWidget {
         icon: PhosphorIconsRegular.downloadSimple,
         onTap: () => showPlanImportSheet(context),
       ),
-      const SizedBox(height: 10),
-      GhostButton(
-        label: t.aiRoutine,
-        icon: PhosphorIconsRegular.sparkle,
-        onTap: fit.goAiPlan,
-      ),
+      if (GymMin.aiRoutine) ...[
+        const SizedBox(height: 10),
+        GhostButton(
+          label: t.aiRoutine,
+          icon: PhosphorIconsRegular.sparkle,
+          onTap: fit.goAiPlan,
+        ),
+      ],
       const SizedBox(height: 30),
       const SizedBox(height: 30),
       const CircuitSection(),
@@ -1378,11 +1381,12 @@ void showRoutineMenu(BuildContext context, Routine r) {
                 Navigator.pop(sheet);
                 fit.startRoutine(r);
               }),
-            OptionItem(t.shareRoutine, icon: PhosphorIconsRegular.shareNetwork, onTap: () {
-              Navigator.pop(sheet);
-              sharePlan([r]);
-            }),
-            if (r.exerciseIds.isNotEmpty)
+            if (GymMin.sharing)
+              OptionItem(t.shareRoutine, icon: PhosphorIconsRegular.shareNetwork, onTap: () {
+                Navigator.pop(sheet);
+                sharePlan([r]);
+              }),
+            if (GymMin.sharing && r.exerciseIds.isNotEmpty)
               OptionItem(t.pdfExport, icon: PhosphorIconsRegular.filePdf, onTap: () {
                 Navigator.pop(sheet);
                 sharePlanPdf([r]);

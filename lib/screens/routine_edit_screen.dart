@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../catalog/exercise_catalog.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
@@ -227,7 +228,7 @@ class _RoutineEditScreenState extends State<RoutineEditScreen> {
               ),
             ),
           ),
-          if (routine.exerciseIds.isNotEmpty)
+          if (GymMin.sharing && routine.exerciseIds.isNotEmpty)
             Semantics(
               button: true,
               label: t.shareRoutine,
