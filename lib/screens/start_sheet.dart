@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/workout.dart';
 import '../state/fit_state.dart';
@@ -71,9 +72,11 @@ class StartSheet extends StatelessWidget {
                   _label(gc, t.orStartFrom),
                   _option(context, gc, PhosphorIconsRegular.listPlus, t.pickExercisesOption,
                       () => fit.startPicking(on: day)),
-                  const SizedBox(height: 8),
-                  _option(context, gc, PhosphorIconsRegular.person, t.chooseFocusOption,
-                      () => fit.startWorkout(null, day)),
+                  if (GymMin.muscleMap) ...[
+                    const SizedBox(height: 8),
+                    _option(context, gc, PhosphorIconsRegular.person, t.chooseFocusOption,
+                        () => fit.startWorkout(null, day)),
+                  ],
                 ],
               ),
             ),

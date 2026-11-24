@@ -5,6 +5,7 @@ import '../widgets/body_map.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../app/desktop.dart';
+import '../gymmin.dart';
 import '../widgets/medal.dart' show Medal;
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
@@ -536,7 +537,9 @@ class HomeScreen extends StatelessWidget {
                             ? () => showStartSheet(context)
                             : isRoutine
                                 ? () => fit.startRoutine(routine)
-                                : fit.startFocusWorkout,
+                                : GymMin.muscleMap
+                                    ? fit.startFocusWorkout
+                                    : fit.startPicking,
                       ),
                     ),
                     if (isRoutine && !done && rest == null) ...[

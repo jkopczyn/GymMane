@@ -8,6 +8,7 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../app/desktop.dart';
 import '../catalog/exercise_catalog.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../services/media_store.dart';
@@ -981,7 +982,7 @@ void showCreateExerciseSheet(BuildContext context,
                                     borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: gc.accent)),
                               ),
                             ),
-                            if (editing == null) ...[
+                            if (editing == null && GymMin.photos) ...[
                               const SizedBox(height: 18),
                               _filterLabel(gc, t.demoMedia),
                               const SizedBox(height: 8),
@@ -1381,12 +1382,14 @@ class _ZoneCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 92,
-                width: double.infinity,
-                child: FittedBox(child: BodyZoneArt(muscles: muscles, height: 92)),
-              ),
-              const SizedBox(height: 10),
+              if (GymMin.muscleMap) ...[
+                SizedBox(
+                  height: 92,
+                  width: double.infinity,
+                  child: FittedBox(child: BodyZoneArt(muscles: muscles, height: 92)),
+                ),
+                const SizedBox(height: 10),
+              ],
               Text(label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

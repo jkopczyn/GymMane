@@ -3,10 +3,23 @@ test/gamification_test.dart: it is on by default and a new medal is queued to be
 test/gamification_test.dart: switching it off drops the medals waiting to be shown ## Medals cannot be switched on with GymMin.medals off.
 test/gamification_test.dart: the profile hides medals and level when it is off ## Medals cannot be switched on with GymMin.medals off.
 test/gamification_test.dart: turning it back on does not replay old medals ## Medals cannot be switched on with GymMin.medals off.
+test/i18n_test.dart: a chosen language always beats the phone one ## The app stays in English with GymMin.languages off.
+test/i18n_test.dart: the switch actually changes the language ## The app stays in English with GymMin.languages off.
+test/live_update_test.dart: selecting a muscle updates the Train screen immediately ## The Train screen has no muscle picker with GymMin.muscleMap off.
 test/nutrition_test.dart: compartir planes y beta la nutrición viene encendida y se recuerda al apagarla ## Nutrition is off by default with GymMin.nutrition off.
+test/persistence_test.dart: a backup round-trips through export and import ## Only the Spanish language check fails; the app stays in English with GymMin.languages off.
+test/persistence_test.dart: everything survives a restart ## Only the Spanish language check fails; the app stays in English with GymMin.languages off.
+test/persistence_test.dart: rubbish input is refused instead of wiping your data ## Only the Spanish language check fails; the app stays in English with GymMin.languages off.
+test/profile_photo_test.dart: avatar falls back to the default photo, not a hole ## The avatar shows a placeholder icon instead of a photo with GymMin.photos off.
+test/profile_photo_test.dart: avatar reacts to a photo picked while it is on screen ## The avatar shows a placeholder icon instead of a photo with GymMin.photos off.
+test/profile_photo_test.dart: avatar renders the photo when there is one ## The avatar shows a placeholder icon instead of a photo with GymMin.photos off.
+test/profile_photo_test.dart: la foto cambia al momento aunque quien la pinta no se reconstruya ## The avatar shows a placeholder icon instead of a photo with GymMin.photos off.
 test/profile_test.dart: a medal is won once and keeps the day it was won ## No medal is queued for celebration with GymMin.medals off.
 test/profile_test.dart: a medal won while opening the app still gets its celebration ## No medal is queued for celebration with GymMin.medals off.
 test/profile_test.dart: one logged food day is enough for the food page of the recap ## The recap has no food page with GymMin.nutrition off.
+test/progress_order_test.dart: a card with nothing in it is not drawn at all ## Progress has no measurement setup step with GymMin.measurements off.
+test/progress_order_test.dart: the card shows up as soon as there is something to show ## Progress has no measurements card with GymMin.measurements off.
+test/progress_order_test.dart: the numbers come first, then the grid, then the body ## Progress has no muscle-map card with GymMin.muscleMap off.
 test/recovery_test.dart: va en la copia de seguridad y vuelve igual ## The recovery setting cannot be switched on with GymMin.recovery off.
 test/recovery_test.dart: viene apagado y no sale en Inicio hasta encenderlo ## The recovery setting cannot be switched on with GymMin.recovery off.
 test/report_csv_test.dart: only offers sections with exportable data in the date range ## The report offers no nutrition section with GymMin.nutrition off.

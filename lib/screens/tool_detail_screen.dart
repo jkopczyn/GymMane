@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 
+import '../catalog/exercise_catalog.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
+import '../models/exercise.dart';
 import '../state/fit_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../widgets/dialogs.dart';
 import '../widgets/glass.dart';
 import '../widgets/ui_kit.dart';
+
+bool toolShown(String? id) => switch (id) {
+      'bmi' || 'bf' || 'ffmi' => GymMin.bodyComposition,
+      'cal' || 'protein' || 'water' => GymMin.nutrition,
+      _ => true,
+    };
+
+List<ToolMeta> shownTools() => [for (final m in kToolMeta) if (toolShown(m.id)) m];
 
 class ToolDetailScreen extends StatelessWidget {
   const ToolDetailScreen({super.key, this.embedded = false});
@@ -16,7 +27,7 @@ class ToolDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gc = context.gc;
-    final id = fit.activeToolId;
+    final id = toolShown(fit.activeToolId) ? fit.activeToolId : shownTools().first.id;
     final meta = _meta(id);
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

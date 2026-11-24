@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../gymmin.dart';
 import '../state/fit_state.dart';
 
 class NfcTags {
@@ -19,7 +20,7 @@ class NfcTags {
   static bool get _android => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   static Future<void> load() async {
-    if (!_android) return;
+    if (!GymMin.nfc || !_android) return;
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'written' && call.arguments is String) _written.add(call.arguments as String);
     });
@@ -37,7 +38,7 @@ class NfcTags {
   }
 
   static Future<({bool available, bool enabled})> state() async {
-    if (!_android) return (available: false, enabled: false);
+    if (!GymMin.nfc || !_android) return (available: false, enabled: false);
     try {
       final s = await _channel.invokeMapMethod<String, Object?>('state');
       return (available: s?['available'] == true, enabled: s?['enabled'] == true);

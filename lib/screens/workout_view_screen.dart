@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/workout.dart';
 import '../state/fit_state.dart';
@@ -76,7 +77,7 @@ class _Totals extends StatelessWidget {
       if (s.volume > 0 && s.durationSec >= 60) '${(s.durationSec / 60).round()} min',
       t.exerciseCount(s.exercises.length),
       t.setCount(s.setCount),
-      if (s.hrAvg != null) '♥ ${s.hrAvg}',
+      if (GymMin.healthConnect && s.hrAvg != null) '♥ ${s.hrAvg}',
     ].join(' · ');
     return SoftCard(
       padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
