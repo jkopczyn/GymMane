@@ -1,0 +1,10 @@
+android.permission.FOREGROUND_SERVICE
+android.permission.POST_NOTIFICATIONS
+android.permission.POST_PROMOTED_NOTIFICATIONS
+android.permission.RECEIVE_BOOT_COMPLETED
+android.permission.SCHEDULE_EXACT_ALARM
+android.permission.USE_EXACT_ALARM
+android.permission.USE_FULL_SCREEN_INTENT
+android.permission.VIBRATE
+android.permission.WAKE_LOCK
+com.cupchinski.gymmin.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION

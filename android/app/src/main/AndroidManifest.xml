@@ -5,37 +5,15 @@
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.NFC"/>
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28"/>
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.health.READ_STEPS"/>
-    <uses-permission android:name="android.permission.health.READ_RESTING_HEART_RATE"/>
-    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
-    <uses-permission android:name="android.permission.health.READ_HEART_RATE_VARIABILITY"/>
-    <uses-permission android:name="android.permission.health.READ_OXYGEN_SATURATION"/>
-    <uses-permission android:name="android.permission.health.READ_RESPIRATORY_RATE"/>
-    <uses-permission android:name="android.permission.health.READ_BLOOD_PRESSURE"/>
-    <uses-permission android:name="android.permission.health.READ_BODY_TEMPERATURE"/>
-    <uses-permission android:name="android.permission.health.READ_SLEEP"/>
-    <uses-permission android:name="android.permission.health.READ_DISTANCE"/>
-    <uses-permission android:name="android.permission.health.READ_FLOORS_CLIMBED"/>
-    <uses-permission android:name="android.permission.health.READ_ELEVATION_GAINED"/>
-    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED"/>
-    <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
-    <uses-permission android:name="android.permission.health.WRITE_EXERCISE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove"/>
 
     <uses-sdk tools:overrideLibrary="androidx.wear.tiles, androidx.wear.protolayout, androidx.wear.protolayout.expression, androidx.wear.protolayout.expression.pipeline,androidx.wear.protolayout.proto, androidx.wear.watchface.complications.datasource, androidx.wear.watchface.complications.data, androidx.wear.watchface.complications, androidx.wear.watchface.complications.data.source, androidx.wear.watchface.data, androidx.wear.watchface.style.data"/>
 
     <uses-feature android:name="android.hardware.type.watch" android:required="false"/>
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
-    <uses-feature android:name="android.hardware.nfc" android:required="false"/>
-    <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
 
     <application
         android:label="GymMin"
@@ -56,6 +34,7 @@
         </service>
         <service
             android:name=".PassTileService"
+            android:enabled="false"
             android:exported="true"
             android:icon="@drawable/ic_qs_pass"
             android:label="@string/qs_pass"
@@ -300,16 +279,6 @@
                 <data android:scheme="gymmane" android:host="today"/>
             </intent-filter>
         </activity-alias>
-        <activity-alias
-            android:name=".HealthPermissionsUsage"
-            android:targetActivity=".MainActivity"
-            android:exported="true"
-            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE"/>
-                <category android:name="android.intent.category.HEALTH_PERMISSIONS"/>
-            </intent-filter>
-        </activity-alias>
         <receiver
             android:name=".HeatmapWidgetProvider"
             android:exported="true">
@@ -332,6 +301,7 @@
         </receiver>
         <receiver
             android:name=".BodyWidgetProvider"
+            android:enabled="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -368,6 +338,7 @@
 
         <receiver
             android:name=".WaterWidgetProvider"
+            android:enabled="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -381,6 +352,7 @@
 
         <receiver
             android:name=".ProteinWidgetProvider"
+            android:enabled="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -394,6 +366,7 @@
 
         <receiver
             android:name=".KcalWidgetProvider"
+            android:enabled="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
