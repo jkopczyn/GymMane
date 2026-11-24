@@ -14,6 +14,7 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../app/desktop.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/profile.dart';
 import '../services/graphics_mode.dart';
@@ -2291,8 +2292,10 @@ class _ProfileSheetState extends State<_ProfileSheet> {
             const SizedBox(height: 3),
             Text(t.autofills, style: AppTheme.f(13, weight: FontWeight.w500, color: gc.textSecondary)),
             const SizedBox(height: 18),
-            _top(gc, sheet),
-            const SizedBox(height: 16),
+            if (GymMin.photos) ...[
+              _top(gc, sheet),
+              const SizedBox(height: 16),
+            ],
             _group(gc, [
               _field(gc, t.nameLabel, TextField(
                 controller: _name,

@@ -11,6 +11,8 @@ import 'package:gymmane/state/fit_state.dart';
 import 'package:gymmane/widgets/medal_shelf.dart';
 import 'package:gymmane/widgets/photo_source_sheet.dart';
 import 'package:gymmane/widgets/profile_avatar.dart';
+import 'package:gymmane/widgets/ui_kit.dart' show sentenceCase;
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'switches.dart';
@@ -99,6 +101,27 @@ void main() {
       await tester.tapAt(const Offset(200, 80));
       await tester.pump(const Duration(milliseconds: 600));
       expect(find.byType(PhotoSourceSheet), on ? findsOneWidget : findsNothing);
+    });
+  }
+
+  for (final on in [false, true]) {
+    testWidgets('the edit sheet ${on ? 'offers' : 'does not offer'} a way to set a photo or cover', (tester) async {
+      if (on) GymMin.setAll(true);
+      fit.setProfilePhoto(_png);
+      fit.setProfileBanner(_png);
+      await openProfile(tester);
+
+      await tester.tap(find.text(t.editProfile));
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.text(t.nameLabel), findsOneWidget);
+      expect(find.text(sentenceCase(t.ageLabel)), findsOneWidget);
+      expect(find.text(sentenceCase(t.heightLabel)), findsOneWidget);
+      final matcher = on ? findsOneWidget : findsNothing;
+      Finder chip(IconData icon) => find.byWidgetPredicate((w) => w is Icon && w.icon == icon && w.size == 14);
+      expect(chip(PhosphorIconsRegular.camera), matcher);
+      expect(chip(PhosphorIconsRegular.image), matcher);
+      expect(find.text(t.removePhoto), matcher);
+      expect(find.text(t.removeCover), matcher);
     });
   }
 
