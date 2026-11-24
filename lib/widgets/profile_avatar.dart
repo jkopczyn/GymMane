@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
+import '../gymmin.dart';
 import '../state/fit_state.dart';
 import '../theme/app_colors.dart';
 
@@ -27,11 +29,13 @@ class ProfileAvatar extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(color: gc.border),
       ),
-      child: Image(
-        image: bytes != null ? MemoryImage(bytes) : defaultPhoto,
-        fit: BoxFit.cover,
-        gaplessPlayback: true,
-      ),
+      child: !GymMin.photos
+          ? Center(child: Icon(PhosphorIconsFill.user, size: size * 0.5, color: gc.textTertiary))
+          : Image(
+              image: bytes != null ? MemoryImage(bytes) : defaultPhoto,
+              fit: BoxFit.cover,
+              gaplessPlayback: true,
+            ),
     );
   }
 }
