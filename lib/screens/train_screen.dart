@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../catalog/exercise_catalog.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../state/fit_state.dart';
@@ -97,6 +98,10 @@ class _TrainScreenState extends State<TrainScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (!GymMin.muscleMap) ...[
+          _option(gc, PhosphorIconsRegular.listPlus, t.pickExercisesOption, () => fit.startPicking(on: fit.logDay)),
+          const SizedBox(height: 10),
+        ] else ...[
         Text(t.step1.toUpperCase(),
             style: AppTheme.f(10.5,
                 weight: FontWeight.w700, color: gc.textTertiary, letterSpacing: 1.5)),
@@ -140,6 +145,7 @@ class _TrainScreenState extends State<TrainScreen> {
         Text(t.orStartWith.toUpperCase(),
             style: AppTheme.f(10.5, weight: FontWeight.w700, color: gc.textTertiary, letterSpacing: 1.4)),
         const SizedBox(height: 10),
+        ],
         IntrinsicHeight(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Expanded(
@@ -171,6 +177,19 @@ class _TrainScreenState extends State<TrainScreen> {
             Text(title, style: AppTheme.f(15, weight: FontWeight.w700, color: gc.text)),
             const SizedBox(height: 3),
             Text(hint, style: AppTheme.f(12, weight: FontWeight.w500, color: gc.textSecondary, height: 1.3)),
+          ]),
+        ),
+      );
+
+  Widget _option(GymColors gc, IconData icon, String label, VoidCallback onTap) => Pressable(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(color: gc.bgRaised, borderRadius: BorderRadius.circular(20)),
+          child: Row(children: [
+            Icon(icon, size: 19, color: gc.accent),
+            const SizedBox(width: 13),
+            Expanded(child: Text(label, style: AppTheme.f(15, weight: FontWeight.w700, color: gc.text))),
           ]),
         ),
       );
@@ -207,8 +226,9 @@ class _TrainScreenState extends State<TrainScreen> {
     final gear = gearHere.contains(_gear) ? _gear : null;
     final exercises = gear == null ? mine : mine.where((e) => e.equipment == gear).toList();
     bool side(Exercise e) => !targets.contains(e.primary) && e.secondary.any(targets.contains);
-    final seeded = searching ? const <Exercise>[] : exercises.where((e) => fit.pickSeed.contains(e.id)).toList();
-    final rest = searching ? exercises : exercises.where((e) => !fit.pickSeed.contains(e.id)).toList();
+    final plain = searching || !GymMin.suggested;
+    final seeded = plain ? const <Exercise>[] : exercises.where((e) => fit.pickSeed.contains(e.id)).toList();
+    final rest = plain ? exercises : exercises.where((e) => !fit.pickSeed.contains(e.id)).toList();
     final others = rest.where((e) => !side(e)).toList();
     final secondary = rest.where(side).toList();
     return Column(
@@ -423,6 +443,7 @@ class _TrainScreenState extends State<TrainScreen> {
         ),
       );
     }
+    if (!GymMin.muscleMap && fit.trainKind == null) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 8),
       child: Column(
