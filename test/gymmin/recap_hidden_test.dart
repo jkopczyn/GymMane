@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymmane/app/gymmane_app.dart';
 import 'package:gymmane/gymmin.dart';
 import 'package:gymmane/l10n/l10n.dart';
+import 'package:gymmane/models/nutrition.dart';
 import 'package:gymmane/models/workout.dart';
 import 'package:gymmane/screens/profile_screen.dart';
 import 'package:gymmane/screens/recap_screen.dart';
@@ -103,6 +104,34 @@ void main() {
 
     final seen = await pagesShown(tester);
     expect(seen, containsAll(['muscle', 'medals', 'sleep', 'share', 'shareButton']));
+  });
+
+  test('steps, food and medals stored while their switches were on give no recap page once off', () {
+    GymMin.setAll(true);
+    fit.stepsOn = true;
+    fit.nutritionBeta = true;
+    fit.gamification = true;
+    logTwoMonths();
+    final month = fit.recapMonth;
+    for (var d = 1; d <= 28; d++) {
+      final day = DateTime(month.year, month.month, d);
+      if (day.isAfter(DateTime.now())) break;
+      fit.stepsByDay['${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}'] = 9000;
+    }
+    fit.foodLog.clear();
+    fit.nutritionDay = month;
+    fit.logQuick('Chicken', const Macros(kcal: 600, protein: 40, carbs: 50, fat: 10));
+    final on = recapExtras(fit.recapFor(month));
+    expect(on.steps, isNotNull);
+    expect(on.food, isNotNull);
+    expect(on.medals, isNotEmpty);
+
+    GymMin.setAll(false);
+    final off = recapExtras(fit.recapFor(month));
+    expect(off.steps, isNull);
+    expect(off.food, isNull);
+    expect(off.medals, isEmpty);
+    fit.foodLog.clear();
   });
 
   testWidgets('a month of sessions keeps the training pages and drops the hidden ones', (tester) async {
