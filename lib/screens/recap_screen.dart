@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../catalog/awards.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
@@ -222,15 +223,15 @@ class _RecapScreenState extends State<RecapScreen> {
       if (_extras.peak != null) _Page.peak,
       if (_lift != null) _Page.lift,
       if (_extras.fresh.isNotEmpty) _Page.fresh,
-      if (_recap.topMuscle != null) _Page.muscle,
+      if (GymMin.muscleMap && _recap.topMuscle != null) _Page.muscle,
       _Page.records,
       if (_extras.medals.isNotEmpty) _Page.medals,
       if (_extras.cardio != null) _Page.cardio,
       if (_extras.steps != null) _Page.steps,
-      if (_extras.sleep != null) _Page.sleep,
+      if (GymMin.healthConnect && _extras.sleep != null) _Page.sleep,
       if (_extras.food != null) _Page.food,
       if (_recap.favDay != null) _Page.habit,
-      _Page.share,
+      if (GymMin.sharing) _Page.share,
     ],
   ];
   final _cards = [GlobalKey(), GlobalKey(), GlobalKey()];
