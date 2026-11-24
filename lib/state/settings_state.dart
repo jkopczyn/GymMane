@@ -143,7 +143,7 @@ mixin SettingsState on FitCore, ToolsState, LibraryState {
       _applyLanguage(PlatformDispatcher.instance.locale.toLanguageTag());
 
   void _applyLanguage(String code) {
-    setAppLanguage(code);
+    setAppLanguage(GymMin.languages ? code : 'en');
     language = appLanguage;
   }
 
