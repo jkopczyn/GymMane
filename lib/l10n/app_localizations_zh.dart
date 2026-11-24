@@ -8489,6 +8489,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nutritionCopyAllHint => 'Also your workout, weight and health data';
+
+  @override
+  String get basedOnGymMane => 'Based on GymMane by InlitX';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
