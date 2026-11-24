@@ -1,0 +1,19 @@
+test/exercise_library_test.dart: biblioteca de ejercicios #95 los recomendados se pueden quitar y se guarda ## The Suggested card setting reads false with GymMin.suggested off.
+test/gamification_test.dart: it is on by default and a new medal is queued to be shown ## Medals are off with GymMin.medals off.
+test/gamification_test.dart: switching it off drops the medals waiting to be shown ## Medals cannot be switched on with GymMin.medals off.
+test/gamification_test.dart: the profile hides medals and level when it is off ## Medals cannot be switched on with GymMin.medals off.
+test/gamification_test.dart: turning it back on does not replay old medals ## Medals cannot be switched on with GymMin.medals off.
+test/nutrition_test.dart: compartir planes y beta la nutrición viene encendida y se recuerda al apagarla ## Nutrition is off by default with GymMin.nutrition off.
+test/profile_test.dart: a medal is won once and keeps the day it was won ## No medal is queued for celebration with GymMin.medals off.
+test/profile_test.dart: a medal won while opening the app still gets its celebration ## No medal is queued for celebration with GymMin.medals off.
+test/profile_test.dart: one logged food day is enough for the food page of the recap ## The recap has no food page with GymMin.nutrition off.
+test/recovery_test.dart: va en la copia de seguridad y vuelve igual ## The recovery setting cannot be switched on with GymMin.recovery off.
+test/recovery_test.dart: viene apagado y no sale en Inicio hasta encenderlo ## The recovery setting cannot be switched on with GymMin.recovery off.
+test/report_csv_test.dart: only offers sections with exportable data in the date range ## The report offers no nutrition section with GymMin.nutrition off.
+test/report_csv_test.dart: preserves the existing formats and exports sessions by their start date ## The report offers no nutrition section with GymMin.nutrition off.
+test/report_csv_test.dart: the CSV picker defaults to workouts and nutrition and can toggle each option ## The CSV picker has no nutrition option with GymMin.nutrition off.
+test/report_kinds_test.dart: copiar el día de nutrición solo la comida, o el día entero con entreno ## Reports leave out food with GymMin.nutrition off.
+test/report_kinds_test.dart: informes nutrición: objetivos, totales por día, comidas y días en objetivo ## Reports leave out food with GymMin.nutrition off.
+test/report_kinds_test.dart: informes todo: día a día con entreno, comida, peso y salud ## Reports leave out food with GymMin.nutrition off.
+test/shell_transition_test.dart: a medal waits before taking over the screen ## Medal popups are off with GymMin.medals off.
+test/shell_transition_test.dart: medals queue up one after another with a pause in between ## Medal popups are off with GymMin.medals off.
