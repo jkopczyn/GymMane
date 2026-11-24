@@ -79,6 +79,10 @@ class AboutScreen extends StatelessWidget {
                 style: AppTheme.f(12.5, weight: FontWeight.w500, color: gc.textTertiary, height: 1.6)),
             const SizedBox(height: 20),
             _credits(gc),
+            const SizedBox(height: 14),
+            Text(t.basedOnGymMane,
+                textAlign: TextAlign.center,
+                style: AppTheme.f(11.5, weight: FontWeight.w500, color: gc.textTertiary, height: 1.5)),
           ];
 
   Widget _sectionLabel(GymColors gc, String label) => Text(label.toUpperCase(),

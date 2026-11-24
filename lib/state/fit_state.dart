@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import '../widgets/glass.dart';
 import '../catalog/exercise_catalog.dart';
 import '../catalog/program_templates.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../models/gym_pass.dart';
@@ -48,6 +49,7 @@ part 'awards_state.dart';
 part 'circuit_state.dart';
 part 'fit_core.dart';
 part 'gym_pass_state.dart';
+part 'gymmin_state.dart';
 part 'health_state.dart';
 part 'library_state.dart';
 part 'measures_state.dart';
@@ -66,7 +68,7 @@ part 'tools_state.dart';
 part 'workout_state.dart';
 
 class FitState extends FitCore
-    with ToolsState, LibraryState, SettingsState, NotesState, PlacesState, GymPassState, MeasuresState, MomentsState, TimelineState, StatsState, StepsState, RecoveryState, HealthState, CircuitState, NutritionState, ReportState, AwardsState, RoutinesState, WorkoutState {
+    with ToolsState, LibraryState, SettingsState, NotesState, PlacesState, GymPassState, MeasuresState, MomentsState, TimelineState, StatsState, StepsState, RecoveryState, HealthState, CircuitState, NutritionState, ReportState, AwardsState, RoutinesState, WorkoutState, GymMinState {
   FitState() {
     setLoad = loadOf;
   }
