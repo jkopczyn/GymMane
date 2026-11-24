@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../app/desktop.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/profile.dart';
 import '../services/food_library.dart';
@@ -190,20 +191,22 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                       ),
                       const SizedBox(height: 30),
                     ],
-                    _photosTile(
-                      context,
-                      Rise(
-                        index: 2,
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                          _heading(gc, t.snapshots,
-                              count: fit.momentCount > 0 ? '${fit.momentCount}' : null,
-                              onMore: fit.momentCount > 0 ? fit.goMoments : null),
-                          const SizedBox(height: 16),
-                          _photoCards(context, gc),
-                        ]),
+                    if (GymMin.photos) ...[
+                      _photosTile(
+                        context,
+                        Rise(
+                          index: 2,
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                            _heading(gc, t.snapshots,
+                                count: fit.momentCount > 0 ? '${fit.momentCount}' : null,
+                                onMore: fit.momentCount > 0 ? fit.goMoments : null),
+                            const SizedBox(height: 16),
+                            _photoCards(context, gc),
+                          ]),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
+                      const SizedBox(height: 30),
+                    ],
                     if (fit.passOn) ...[
                       Rise(
                         index: 3,
@@ -776,17 +779,19 @@ class _ProfileHeader extends SliverPersistentHeaderDelegate {
               );
             },
             child: GestureDetector(
-              onTap: onBanner,
+              onTap: GymMin.photos ? onBanner : null,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
                   DecoratedBox(
                     decoration: BoxDecoration(
                       color: gc.bgRaised,
-                      image: DecorationImage(
-                        image: bytes == null ? kDefaultBanner : MemoryImage(bytes),
-                        fit: BoxFit.cover,
-                      ),
+                      image: !GymMin.photos
+                          ? null
+                          : DecorationImage(
+                              image: bytes == null ? kDefaultBanner : MemoryImage(bytes),
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                   IgnorePointer(
