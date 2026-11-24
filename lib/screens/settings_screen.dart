@@ -1838,7 +1838,7 @@ class SettingsScreen extends StatelessWidget {
       isScrollControlled: true,
       builder: (sheet) => StatefulBuilder(
         builder: (sheet, setSheet) {
-          final photo = GymMin.photos ? fit.bgPhotoPath : null;
+          final photo = fit.bgPhotoPath;
           return Container(
             padding: sheetPad(sheet),
             decoration: sheetDecoration(gc),
