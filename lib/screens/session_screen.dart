@@ -4,6 +4,7 @@ import '../widgets/body_map.dart';
 import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/exercise.dart';
 import '../models/live_session.dart';
@@ -2220,7 +2221,7 @@ class SessionScreen extends StatelessWidget {
               const SizedBox(height: 10),
               const Rise(index: 3, child: _ExtrasCard()),
             ],
-            if (fit.filedSession case final filed?) ...[
+            if (fit.filedSession case final filed? when GymMin.photos) ...[
               const SizedBox(height: 10),
               Rise(index: 3, child: SessionPhotos(filed)),
             ],
@@ -2237,8 +2238,8 @@ class SessionScreen extends StatelessWidget {
                       ? PrimaryButton(label: t.done, onTap: fit.saveAndExit)
                       : PrimaryButton(label: t.done, bg: gc.bgRaised, fg: gc.text, onTap: fit.saveAndExit),
                 ),
-                const SizedBox(width: 10),
-                Semantics(
+                if (GymMin.sharing) const SizedBox(width: 10),
+                if (GymMin.sharing) Semantics(
                   button: true,
                   label: t.share,
                   child: GestureDetector(
@@ -2262,7 +2263,7 @@ class SessionScreen extends StatelessWidget {
                 onTap: fit.continueSession,
               ),
             ),
-            if (sets > 0 && fit.sessions.isNotEmpty) ...[
+            if (GymMin.sharing && sets > 0 && fit.sessions.isNotEmpty) ...[
               const SizedBox(height: 10),
               Rise(
                 index: 5,
