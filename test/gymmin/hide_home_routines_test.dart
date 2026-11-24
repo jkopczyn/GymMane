@@ -3,11 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gymmane/app/gymmane_app.dart';
 import 'package:gymmane/gymmin.dart';
 import 'package:gymmane/l10n/l10n.dart';
+import 'package:gymmane/models/progress_shot.dart';
 import 'package:gymmane/screens/home_screen.dart';
 import 'package:gymmane/screens/routine_edit_screen.dart';
 import 'package:gymmane/screens/routines_screen.dart';
 import 'package:gymmane/screens/start_sheet.dart';
 import 'package:gymmane/screens/train_screen.dart';
+import 'package:gymmane/services/health_steps.dart';
 import 'package:gymmane/services/local_store.dart';
 import 'package:gymmane/state/fit_state.dart';
 import 'package:gymmane/widgets/body_map.dart';
@@ -56,6 +58,12 @@ void main() {
     return fit.activeRoutines.last.id;
   }
 
+  void photoOverdue() {
+    fit.photoIntervalDays = 30;
+    fit.shots.add(ProgressEntry(
+        id: 'old', date: DateTime.now().subtract(const Duration(days: 60)), shots: const {'front': 'a.jpg'}));
+  }
+
   Finder inTrain(Finder f) => find.descendant(of: find.byType(TrainScreen), matching: f);
 
   group('Home', () {
@@ -65,7 +73,11 @@ void main() {
       fit.showRecommended = true;
       fit.stepsOn = true;
       fit.showMiniBody = true;
+      photoOverdue();
       await pumpApp(tester);
+      fit.stepsAccess = HealthAccess.granted;
+      fit.notifyListeners();
+      await tester.pumpAndSettle();
       expect(find.byType(HomeScreen), findsOneWidget);
       expect(find.text(titleCase(t.nutrition)), findsNothing);
       expect(find.text(titleCase(t.recommended)), findsNothing);
@@ -82,6 +94,23 @@ void main() {
       await pumpApp(tester);
       expect(find.text(titleCase(t.nutrition)), findsOneWidget);
       expect(find.text(titleCase(t.recommended)), findsOneWidget);
+    });
+
+    testWidgets('shows the steps card, mini body and photo card with their switches on', (tester) async {
+      GymMin.steps = true;
+      GymMin.muscleMap = true;
+      GymMin.photos = true;
+      routineWithExercises();
+      fit.stepsOn = true;
+      fit.showMiniBody = true;
+      photoOverdue();
+      await pumpApp(tester);
+      fit.stepsAccess = HealthAccess.granted;
+      fit.notifyListeners();
+      await tester.pumpAndSettle();
+      expect(find.byType(StepsCard), findsOneWidget);
+      expect(find.byType(MiniBody), findsWidgets);
+      expect(find.text(t.photoDueNow), findsOneWidget);
     });
 
     testWidgets('the focus Start button opens the exercise picker', (tester) async {
