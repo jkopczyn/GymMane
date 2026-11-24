@@ -28,7 +28,5 @@ test/report_csv_test.dart: the CSV picker defaults to workouts and nutrition and
 test/report_kinds_test.dart: copiar el día de nutrición solo la comida, o el día entero con entreno ## Reports leave out food with GymMin.nutrition off.
 test/report_kinds_test.dart: informes nutrición: objetivos, totales por día, comidas y días en objetivo ## Reports leave out food with GymMin.nutrition off.
 test/report_kinds_test.dart: informes todo: día a día con entreno, comida, peso y salud ## Reports leave out food with GymMin.nutrition off.
-test/settings_test.dart: guía en el buscador cada respuesta que lleva a Ajustes apunta a una fila que existe (en) ## The gym pass help topic points at a settings row hidden with GymMin.gymPass; issue 11 hides Help topics.
-test/settings_test.dart: guía en el buscador cada respuesta que lleva a Ajustes apunta a una fila que existe (es) ## The gym pass help topic points at a settings row hidden with GymMin.gymPass; issue 11 hides Help topics.
 test/shell_transition_test.dart: a medal waits before taking over the screen ## Medal popups are off with GymMin.medals off.
 test/shell_transition_test.dart: medals queue up one after another with a pause in between ## Medal popups are off with GymMin.medals off.
