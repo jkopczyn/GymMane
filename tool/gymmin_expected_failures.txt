@@ -3,7 +3,12 @@ test/gamification_test.dart: it is on by default and a new medal is queued to be
 test/gamification_test.dart: switching it off drops the medals waiting to be shown ## Medals cannot be switched on with GymMin.medals off.
 test/gamification_test.dart: the profile hides medals and level when it is off ## Medals cannot be switched on with GymMin.medals off.
 test/gamification_test.dart: turning it back on does not replay old medals ## Medals cannot be switched on with GymMin.medals off.
+test/i18n_test.dart: a chosen language always beats the phone one ## The app stays in English with GymMin.languages off.
+test/i18n_test.dart: the switch actually changes the language ## The app stays in English with GymMin.languages off.
 test/nutrition_test.dart: compartir planes y beta la nutrición viene encendida y se recuerda al apagarla ## Nutrition is off by default with GymMin.nutrition off.
+test/persistence_test.dart: a backup round-trips through export and import ## Only the Spanish language check fails; the app stays in English with GymMin.languages off.
+test/persistence_test.dart: everything survives a restart ## Only the Spanish language check fails; the app stays in English with GymMin.languages off.
+test/persistence_test.dart: rubbish input is refused instead of wiping your data ## Only the Spanish language check fails; the app stays in English with GymMin.languages off.
 test/profile_test.dart: a medal is won once and keeps the day it was won ## No medal is queued for celebration with GymMin.medals off.
 test/profile_test.dart: a medal won while opening the app still gets its celebration ## No medal is queued for celebration with GymMin.medals off.
 test/profile_test.dart: one logged food day is enough for the food page of the recap ## The recap has no food page with GymMin.nutrition off.
