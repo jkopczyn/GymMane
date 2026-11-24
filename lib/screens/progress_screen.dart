@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../app/desktop.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/progress_shot.dart';
 import '../models/workout.dart';
@@ -63,8 +64,8 @@ class ProgressScreen extends StatelessWidget {
       _heroRow(context, gc, change, bw),
       _consistency(context, gc),
       _totals(gc),
-      const _MuscleMapCard(),
-      if (fit.sessions.isNotEmpty) const MuscleRadarCard(),
+      if (GymMin.muscleMap) const _MuscleMapCard(),
+      if (GymMin.muscleMap && fit.sessions.isNotEmpty) const MuscleRadarCard(),
       ..._blocks(context, gc, bw, split, prs),
       if (fit.sessions.isNotEmpty && _missing.isNotEmpty) _setupCard(context, gc),
     ];
@@ -115,9 +116,11 @@ class ProgressScreen extends StatelessWidget {
             _consistency(context, gc),
             const SizedBox(height: 12),
             _totals(gc),
-            const SizedBox(height: 12),
-            const _MuscleMapCard(),
-            if (fit.sessions.isNotEmpty) ...[
+            if (GymMin.muscleMap) ...[
+              const SizedBox(height: 12),
+              const _MuscleMapCard(),
+            ],
+            if (GymMin.muscleMap && fit.sessions.isNotEmpty) ...[
               const SizedBox(height: 12),
               const MuscleRadarCard(),
             ],
@@ -149,6 +152,7 @@ class ProgressScreen extends StatelessWidget {
             ),
           ),
         );
+    if (!GymMin.sharing && fit.sessions.isEmpty) return const SizedBox.shrink();
     return Container(
       height: 40,
       decoration: BoxDecoration(
@@ -160,14 +164,16 @@ class ProgressScreen extends StatelessWidget {
         if (fit.sessions.isNotEmpty) ...[
           half(sentenceCase(t.historyTitle), fit.goHistory, [
             Icon(PhosphorIconsBold.clockCounterClockwise, size: 16, color: gc.textSecondary),
-          ], const EdgeInsets.fromLTRB(14, 0, 12, 0)),
-          Container(width: 1, height: 18, color: gc.border),
-          half(t.reportTitle, () => showReportSheet(context), [
-            Icon(PhosphorIconsBold.fileText, size: 16, color: gc.textSecondary),
-          ], const EdgeInsets.fromLTRB(12, 0, 12, 0)),
-          Container(width: 1, height: 18, color: gc.border),
+          ], EdgeInsets.fromLTRB(14, 0, GymMin.sharing ? 12 : 14, 0)),
+          if (GymMin.sharing) ...[
+            Container(width: 1, height: 18, color: gc.border),
+            half(t.reportTitle, () => showReportSheet(context), [
+              Icon(PhosphorIconsBold.fileText, size: 16, color: gc.textSecondary),
+            ], const EdgeInsets.fromLTRB(12, 0, 12, 0)),
+            Container(width: 1, height: 18, color: gc.border),
+          ],
         ],
-        half(t.share, () => showShareSheet(context), [
+        if (GymMin.sharing) half(t.share, () => showShareSheet(context), [
           Icon(PhosphorIconsBold.export, size: 15, color: gc.accent),
           const SizedBox(width: 7),
           Text(sentenceCase(t.share), style: AppTheme.f(13, weight: FontWeight.w700, color: gc.text)),
@@ -476,7 +482,7 @@ class ProgressScreen extends StatelessWidget {
               ],
             ],
           ),
-          for (final (i, note) in fit.weekInsights.indexed) ...[
+          for (final (i, note) in fit.weekInsights.where((n) => GymMin.muscleMap || n.kind != 'muscle').indexed) ...[
             SizedBox(height: i == 0 ? 18 : 10),
             _insight(gc, note),
           ],
@@ -520,8 +526,8 @@ class ProgressScreen extends StatelessWidget {
   List<({String label, bool done, String route})> _steps() => [
         (label: t.setupWorkout, done: fit.sessions.isNotEmpty, route: 'train'),
         (label: t.setupWeight, done: fit.bodyweight.isNotEmpty, route: 'weight'),
-        (label: t.setupMeasures, done: fit.measures.isNotEmpty, route: 'measures'),
-        (label: t.setupPhoto, done: fit.shotCount > 0, route: 'timeline'),
+        if (GymMin.measurements) (label: t.setupMeasures, done: fit.measures.isNotEmpty, route: 'measures'),
+        if (GymMin.photos) (label: t.setupPhoto, done: fit.shotCount > 0, route: 'timeline'),
       ];
 
   List<String> get _missing =>
@@ -530,7 +536,7 @@ class ProgressScreen extends StatelessWidget {
   void _goStep(BuildContext context, String route) {
     switch (route) {
       case 'train':
-        fit.startWorkout();
+        GymMin.muscleMap ? fit.startWorkout() : fit.startPicking();
       case 'weight':
         _logBodyweight(context);
       case 'measures':
@@ -595,12 +601,12 @@ class ProgressScreen extends StatelessWidget {
     return [
       if (fit.sessions.isNotEmpty) _thisWeek(gc),
       if (fit.trackedExercises.isNotEmpty) _StrengthCard(),
-      if (fit.structuralBalance != null) const _BalanceCard(),
+      if (GymMin.muscleMap && fit.structuralBalance != null) const _BalanceCard(),
       if (fit.readinessRecent.rated > 0) _ReadinessCard(),
       if (prs.isNotEmpty) _PrCard(prs),
-      if (fit.shotCount > 0) _timelineCard(gc),
-      if (fit.measures.isNotEmpty) _measuresCard(gc),
-      if (fit.healthShown.isNotEmpty) const HealthCard(),
+      if (GymMin.photos && fit.shotCount > 0) _timelineCard(gc),
+      if (GymMin.measurements && fit.measures.isNotEmpty) _measuresCard(gc),
+      if (GymMin.healthConnect && fit.healthShown.isNotEmpty) const HealthCard(),
     ];
   }
 
@@ -2294,7 +2300,7 @@ class _DaySheet extends StatelessWidget {
           ),
         ),
         _sessionMeta(context, gc, s),
-        if (fit.momentsOf(s).isNotEmpty)
+        if (GymMin.photos && fit.momentsOf(s).isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 4, bottom: 10),
             child: SessionPhotos(s, framed: false),
