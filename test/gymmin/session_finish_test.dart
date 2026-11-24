@@ -153,6 +153,7 @@ void main() {
     startBench();
     await pumpApp(tester);
     expect(fit.route, 'session');
+    expect(find.byType(MiniBody), findsNothing);
     final sets = fit.session!.exercises.single.sets.length;
     fit.endCountdown();
     await tester.pump(const Duration(seconds: 1));
