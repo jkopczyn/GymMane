@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
 import '../catalog/exercise_catalog.dart';
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../models/gym_pass.dart';
 import '../state/fit_state.dart';
@@ -562,20 +563,20 @@ class AlertsShowcase extends StatelessWidget {
       ],
       right: [
         _stack(0, [
-          _wideStat(gc, PhosphorIconsRegular.pill, '10:00', t.suppCreatine, gc.brass),
-          _chips(gc, const ['5 g', '3 g', '500 mg', '1000 IU'], on: 0),
-          _macros(gc, [('P', 0.8, gc.accent), ('C', 0.55, gc.sage), ('G', 0.4, gc.warn)]),
-          _wideStat(gc, PhosphorIconsRegular.drop, '2 L', '', gc.info),
+          if (GymMin.nutrition) _wideStat(gc, PhosphorIconsRegular.pill, '10:00', t.suppCreatine, gc.brass),
+          if (GymMin.nutrition) _chips(gc, const ['5 g', '3 g', '500 mg', '1000 IU'], on: 0),
+          if (GymMin.nutrition) _macros(gc, [('P', 0.8, gc.accent), ('C', 0.55, gc.sage), ('G', 0.4, gc.warn)]),
+          if (GymMin.nutrition) _wideStat(gc, PhosphorIconsRegular.drop, '2 L', '', gc.info),
           _bars(gc, const [0.3, 0.6, 0.45, 0.8, 0.55, 1.0, 0.7], hi: 5),
-          _wideStat(gc, PhosphorIconsRegular.camera, '14', t.notifPhotoTitle, gc.info),
-          _rings(gc, [(0.7, gc.accent, '7/10'), (0.4, gc.sage, '2 L'), (0.9, gc.brass, '5 g')]),
+          if (GymMin.photos) _wideStat(gc, PhosphorIconsRegular.camera, '14', t.notifPhotoTitle, gc.info),
+          if (GymMin.nutrition) _rings(gc, [(0.7, gc.accent, '7/10'), (0.4, gc.sage, '2 L'), (0.9, gc.brass, '5 g')]),
         ]),
         _stack(0, [
           _iconTile(gc, PhosphorIconsRegular.speakerHigh, '80 %', '', gc.text),
           _toggleTile(gc, PhosphorIconsRegular.headphones, true),
-          _gauge(gc, 0.75, '16 h', gc.warn),
+          if (GymMin.nutrition) _gauge(gc, 0.75, '16 h', gc.warn),
           _iconTile(gc, PhosphorIconsRegular.bellSimpleSlash, '8:00', '', gc.textTertiary),
-          _iconTile(gc, PhosphorIconsRegular.footprints, '6 240', '', gc.sage),
+          if (GymMin.steps) _iconTile(gc, PhosphorIconsRegular.footprints, '6 240', '', gc.sage),
           _iconTile(gc, PhosphorIconsRegular.coffee, '1', '', gc.brass),
           _toggleTile(gc, PhosphorIconsRegular.moon, false),
         ]),
@@ -587,6 +588,7 @@ class AlertsShowcase extends StatelessWidget {
           restNote,
           live,
           island,
+          if (GymMin.photos)
           _note(gc,
               icon: PhosphorIconsFill.camera,
               tone: gc.info,
@@ -637,8 +639,9 @@ class AlertsShowcase extends StatelessWidget {
           ),
           _spark(gc, const [62, 75, 58, 90, 70, 84, 96, 78, 88], gc.accent, '1:30', t.liveResting),
         ]),
-        _stack(40, [timer, supp, fast, _iconTile(gc, PhosphorIconsRegular.ruler, '14', t.notifMeasureTitle, gc.warn),
-            _iconTile(gc, PhosphorIconsRegular.drop, '1,5 L', '', gc.info),
+        _stack(40, [timer, if (GymMin.nutrition) supp, if (GymMin.nutrition) fast,
+            if (GymMin.measurements) _iconTile(gc, PhosphorIconsRegular.ruler, '14', t.notifMeasureTitle, gc.warn),
+            if (GymMin.nutrition) _iconTile(gc, PhosphorIconsRegular.drop, '1,5 L', '', gc.info),
             _iconTile(gc, PhosphorIconsRegular.clockCountdown, '5 min', '', gc.accent)]),
       ],
     );
@@ -748,16 +751,16 @@ class HomeExtrasShowcase extends StatelessWidget {
       left: [
         _stack(0, [
           _gauge(gc, 0.6, '60 %', gc.accent),
-          _iconTile(gc, PhosphorIconsRegular.heartbeat, '128', t.healthBpm, gc.accent),
+          if (GymMin.healthConnect) _iconTile(gc, PhosphorIconsRegular.heartbeat, '128', t.healthBpm, gc.accent),
           _iconTile(gc, PhosphorIconsRegular.barbell, '42', '', gc.text),
           _iconTile(gc, PhosphorIconsRegular.lightning, '4', t.streakCaps, gc.accent),
           _iconTile(gc, PhosphorIconsRegular.target, '100 %', '', gc.sage),
-          _toggleTile(gc, PhosphorIconsRegular.heart, false),
+          if (GymMin.healthConnect) _toggleTile(gc, PhosphorIconsRegular.heart, false),
           _iconTile(gc, PhosphorIconsRegular.bicycle, '12', 'km', gc.textSecondary),
         ]),
         _stack(0, [
           _bars(gc, const [0.4, 0.7, 0.2, 0.9, 0.5, 1.0, 0.3], hi: 5),
-          _wideStat(gc, PhosphorIconsRegular.personSimpleRun, '8 432', t.homeCardSteps, gc.sage),
+          if (GymMin.steps) _wideStat(gc, PhosphorIconsRegular.personSimpleRun, '8 432', t.homeCardSteps, gc.sage),
           _chips(gc, [for (var d = 1; d <= 7; d++) _letter(d)], on: 3),
           _calendar(gc, 7, '18', gc.accent),
           _wideStat(gc, PhosphorIconsRegular.barbell, '3,9 t', '', gc.text),
@@ -767,16 +770,16 @@ class HomeExtrasShowcase extends StatelessWidget {
       ],
       right: [
         _stack(0, [
-          _wideStat(gc, PhosphorIconsRegular.moon, '7:42', t.unitHours, gc.warn),
+          if (GymMin.healthConnect) _wideStat(gc, PhosphorIconsRegular.moon, '7:42', t.unitHours, gc.warn),
           _bars(gc, const [0.6, 0.3, 0.8, 1.0, 0.0, 0.5, 0.7], hi: 3),
           _wideStat(gc, PhosphorIconsRegular.chartLineUp, '+2,5 kg', '', gc.sage),
           _chips(gc, const ['1 RM', '5 RM', '10 RM'], on: 0),
-          _macros(gc, [('P', 0.9, gc.accent), ('C', 0.6, gc.sage), ('G', 0.45, gc.warn)]),
+          if (GymMin.nutrition) _macros(gc, [('P', 0.9, gc.accent), ('C', 0.6, gc.sage), ('G', 0.45, gc.warn)]),
           _exerciseList(gc, 25),
           _spark(gc, const [80.2, 79.8, 79.9, 79.1, 78.9, 79.0, 78.6, 78.4], gc.brass, '78,4', 'kg'),
         ]),
         _stack(0, [
-          _iconTile(gc, PhosphorIconsRegular.drop, '2,1 L', '', gc.info),
+          if (GymMin.nutrition) _iconTile(gc, PhosphorIconsRegular.drop, '2,1 L', '', gc.info),
           _toggleTile(gc, PhosphorIconsRegular.bell, true),
           _iconTile(gc, PhosphorIconsRegular.clock, '17:05', '', gc.textSecondary),
           _iconTile(gc, PhosphorIconsRegular.trendUp, '+12 %', '', gc.sage),
@@ -786,14 +789,16 @@ class HomeExtrasShowcase extends StatelessWidget {
         ]),
       ],
       columns: [
-        _stack(20, [steps, medal, _iconTile(gc, PhosphorIconsRegular.fire, '520', 'kcal', gc.accent),
+        _stack(20, [if (GymMin.steps) steps, if (GymMin.medals) medal,
+            if (GymMin.nutrition) _iconTile(gc, PhosphorIconsRegular.fire, '520', 'kcal', gc.accent),
             _iconTile(gc, PhosphorIconsRegular.scales, '78,4', 'kg', gc.textSecondary),
-            _toggleTile(gc, PhosphorIconsRegular.footprints, true),
+            if (GymMin.steps) _toggleTile(gc, PhosphorIconsRegular.footprints, true),
             _iconTile(gc, PhosphorIconsRegular.timer, '55 min', '', gc.textSecondary)]),
         _stack(0, [
-          passCard,
-          heart,
+          if (GymMin.gymPass) passCard,
+          if (GymMin.healthConnect) heart,
           week,
+          if (GymMin.medals)
           _Tile(
             w: 330,
             h: 120,
@@ -825,7 +830,8 @@ class HomeExtrasShowcase extends StatelessWidget {
           ),
           _exerciseList(gc, 11),
         ]),
-        _stack(40, [streak, sleep, medalLocked, _iconTile(gc, PhosphorIconsRegular.path, '4,2', 'km', gc.sage),
+        _stack(40, [streak, if (GymMin.healthConnect) sleep, if (GymMin.medals) medalLocked,
+            _iconTile(gc, PhosphorIconsRegular.path, '4,2', 'km', gc.sage),
             _iconTile(gc, PhosphorIconsRegular.trophy, '3', '', gc.brass), _gauge(gc, 0.9, '9/10', gc.brass)]),
       ],
     );
@@ -992,13 +998,13 @@ class LookShowcase extends StatelessWidget {
           _iconTile(gc, PhosphorIconsRegular.ruler, 'cm', '', gc.sage),
           _gauge(gc, 0.3, '1,15×', gc.sage),
           _iconTile(gc, PhosphorIconsRegular.thermometer, '°C', '', gc.warn),
-          _iconTile(gc, PhosphorIconsRegular.arrowsLeftRight, 'RTL', '', gc.textSecondary),
+          if (GymMin.languages) _iconTile(gc, PhosphorIconsRegular.arrowsLeftRight, 'RTL', '', gc.textSecondary),
           _iconTile(gc, PhosphorIconsRegular.calendarBlank, _letter(1), '', gc.accent),
         ]),
         _stack(0, [
           _wideStat(gc, PhosphorIconsRegular.clock, '6:30 PM', '12 h', gc.textSecondary),
           _bars(gc, const [0.2, 0.9, 0.5, 0.7, 0.35, 0.6, 0.0], hi: 1),
-          _chips(gc, const ['ES', 'EN', 'DE', 'FR', 'IT', 'PT', 'العربية'], on: 0),
+          if (GymMin.languages) _chips(gc, const ['ES', 'EN', 'DE', 'FR', 'IT', 'PT', 'العربية'], on: 0),
           _calendar(gc, 5, '84', gc.accent),
           _rings(gc, [(0.33, gc.textSecondary, '1×'), (0.66, gc.accent, '1,15×'), (1.0, gc.text, '1,3×')]),
           _wideStat(gc, PhosphorIconsRegular.squaresFour, '3', '', gc.text),
@@ -1018,7 +1024,7 @@ class LookShowcase extends StatelessWidget {
         _stack(0, [
           _toggleTile(gc, PhosphorIconsRegular.sunDim, false),
           _iconTile(gc, PhosphorIconsRegular.eye, '100 %', '', gc.textSecondary),
-          _iconTile(gc, PhosphorIconsRegular.image, '9:16', '', gc.info),
+          if (GymMin.photos) _iconTile(gc, PhosphorIconsRegular.image, '9:16', '', gc.info),
           _iconTile(gc, PhosphorIconsRegular.palette, '4', '', gc.accent),
           _iconTile(gc, PhosphorIconsRegular.frameCorners, '16', '', gc.textSecondary),
           _iconTile(gc, PhosphorIconsRegular.monitor, '1440', '', gc.textSecondary),
@@ -1026,7 +1032,7 @@ class LookShowcase extends StatelessWidget {
         ]),
       ],
       columns: [
-        _stack(20, [themes, units, text, _iconTile(gc, PhosphorIconsRegular.translate, 'A文', '', gc.accent),
+        _stack(20, [themes, units, text, if (GymMin.languages) _iconTile(gc, PhosphorIconsRegular.translate, 'A文', '', gc.accent),
             _iconTile(gc, PhosphorIconsRegular.clock, '18:30', '24 h', gc.textSecondary),
             _toggleTile(gc, PhosphorIconsRegular.moon, true),
             _iconTile(gc, PhosphorIconsRegular.textAa, '1,3×', '', gc.textSecondary)]),

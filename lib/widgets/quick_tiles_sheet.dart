@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 
+import '../gymmin.dart';
 import '../l10n/l10n.dart';
 import '../services/quick_tiles.dart';
 import '../state/fit_state.dart';
@@ -65,6 +66,7 @@ class _QuickTilesSheetState extends State<_QuickTilesSheet> {
                     added: _added.contains('today'),
                     onAdd: QuickTiles.canAdd ? () => _add('today') : null,
                   ),
+                  if (GymMin.gymPass) ...[
                   const SizedBox(height: 10),
                   _Tile(
                     icon: PhosphorIconsRegular.identificationCard,
@@ -73,6 +75,7 @@ class _QuickTilesSheetState extends State<_QuickTilesSheet> {
                     added: _added.contains('pass'),
                     onAdd: QuickTiles.canAdd && pass != null ? () => _add('pass') : null,
                   ),
+                  ],
                   if (!QuickTiles.canAdd) ...[
                     const SizedBox(height: 14),
                     Text(t.qsManual,
